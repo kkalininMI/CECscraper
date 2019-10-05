@@ -1,6 +1,7 @@
 #' @title ScrapeCandidates function
 #' @description This function extracts the candidate-related data information from the webpages.
 #' @param x url, list of urls
+#' @param tabextract select the table number to extract in order to override the table selection algorithm.
 #' @param savetodir save html downloaded data files in directory, i.e. "C:/Documents"
 #' @export
 #' @import dplyr
@@ -13,7 +14,7 @@
 
 
 
-ScrapeCandidates<-function(x, savetodir=""){
+ScrapeCandidates<-function(x, tabextract=NULL, savetodir=""){
   assign("filecounter", 1 , envir = .GlobalEnv)
 
   scraptable <- function(url, savetodir){
@@ -24,10 +25,16 @@ ScrapeCandidates<-function(x, savetodir=""){
       assign("filecounter", filecounter+1 , envir = .GlobalEnv)
     }
     tbls <- webpage %>% html_nodes(xpath="//table")%>%html_table(fill = TRUE)
+
     t1<-unlist(lapply(tbls, function(x) sum(!is.na(x))/(dim(x)[1]*dim(x)[2])))
     t2<-unlist(lapply(tbls, function(x) dim(x)[1]))
     t3<-lapply(tbls, function(x) any(apply(x, 2, function(y) grepl("FIO", Transliterate(y)))))
-    tbl <- tryCatch(tbls[[which(t1>.9 & t2>10)]], error = function(e) e)
+
+    if(!is.null(tabextract)){tabnum <- tabextract
+    }else{
+      tabnum <- which(t1>.9 & t2>10)}
+
+    tbl <- tryCatch(tbls[[tabnum]], error = function(e) e)
     if(inherits(tbl,  "error")){
       tbl <- tryCatch(tbls[[which(unlist(t3))[length(which(unlist(t3)))]]], error = function(e) e)
       if(inherits(tbl,  "error")){

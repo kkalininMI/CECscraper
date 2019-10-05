@@ -5,6 +5,7 @@
 #' @param ttime checks if extracted data covers reported turnout over election day (TRUE) or not (FALSE).
 #' @param typedata checks whether the data extracted from "svodnya tablitsa"(pivot table) link (fast approach) or "rezultaty vyborov" link (slow approach).
 #' @param dnames assign to column name labels original labels (TRUE) or not (FALSE).
+#' @param tabextract select the table number to extract in order to override the table selection algorithm.
 #' @param savetodir save html data files to specified directory, i.e. "C:/Documents".
 #' @export
 #' @import dplyr
@@ -38,7 +39,7 @@
 #' #                 PageLinkExtractor("sayt izbiratel'noy komissii sub\"yekta Rossiyskoy Federatsii")%>%
 #' #                 DataBuilder(typedata="fast", bylevel="level2", ttime=TRUE)%>%DataMerger()
 
-DataBuilder<-function(x, bylevel=NULL, ttime=FALSE,  typedata="slow", dnames=FALSE, savetodir=""){
+DataBuilder<-function(x, bylevel=NULL, ttime=FALSE,  typedata="slow", dnames=FALSE, tabextract=NULL, savetodir=""){
   assign("filecounter", 1 , envir = .GlobalEnv)
   storage<-list()
 
@@ -47,13 +48,12 @@ DataBuilder<-function(x, bylevel=NULL, ttime=FALSE,  typedata="slow", dnames=FAL
     mdat <- split(x, splvar);
 
     for (iterN in names(mdat)){
-      storage[[iterN]]<-contentextractor(mdat[[iterN]], uplevel=iterN, ttime, typedata, dnames, savetodir)
+      storage[[iterN]]<-contentextractor(mdat[[iterN]], uplevel=iterN, ttime, typedata, dnames, savetodir, tabextract)
     }
 
   }else{
     mdat=x
-    storage<-contentextractor(mdat, uplevel="Full dataset", ttime, typedata, dnames, savetodir)
+    storage<-contentextractor(mdat, uplevel="Full dataset", ttime, typedata, dnames, savetodir, tabextract)
   }
   return_result=list(data=storage, ttime=ttime, dnames=dnames, bylevel=bylevel, retreivaldate=Sys.time())
   return(return_result)}
-

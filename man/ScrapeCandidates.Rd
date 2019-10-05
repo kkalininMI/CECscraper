@@ -4,10 +4,12 @@
 \alias{ScrapeCandidates}
 \title{ScrapeCandidates function}
 \usage{
-ScrapeCandidates(x, savetodir = "")
+ScrapeCandidates(x, tabextract = NULL, savetodir = "")
 }
 \arguments{
 \item{x}{url, list of urls}
+
+\item{tabextract}{select the table number to extract in order to override the table selection algorithm.}
 
 \item{savetodir}{save html downloaded data files in directory, i.e. "C:/Documents"}
 }

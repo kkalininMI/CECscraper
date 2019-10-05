@@ -57,8 +57,8 @@ DataMerger<-function(x, byrow=TRUE){
       acc=1
       print("Merging lists into a data frame...")
       for(i in 1:length(x$data)){    #length(list.vote_content)
-        adat=data.frame(x$data[[i]])
-        n.dat=colnames(adat)
+        adat=x$data[[i]]
+        n.dat=names(adat)
         for(j in 1:length(n.dat)){
           if(!n.dat[j]%in%cnames){
             cnames=c(cnames, n.dat[j])
@@ -71,7 +71,7 @@ DataMerger<-function(x, byrow=TRUE){
       }
       storage <- fulldata[,-1]; cnames=cnames[-1]
       storage<-storage[1:(acc-1),1:(length(cnames))]
-      colnames(storage)<-cnames}
+      names(storage)<-cnames}
     levelvar=NULL
   }
 

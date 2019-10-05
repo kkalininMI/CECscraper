@@ -5,7 +5,7 @@
 \title{DataBuilder function}
 \usage{
 DataBuilder(x, bylevel = NULL, ttime = FALSE, typedata = "slow",
-  dnames = FALSE, savetodir = "")
+  dnames = FALSE, tabextract = NULL, savetodir = "")
 }
 \arguments{
 \item{x}{link/list/data frame with links.}
@@ -17,6 +17,8 @@ DataBuilder(x, bylevel = NULL, ttime = FALSE, typedata = "slow",
 \item{typedata}{checks whether the data extracted from "svodnya tablitsa"(pivot table) link (fast approach) or "rezultaty vyborov" link (slow approach).}
 
 \item{dnames}{assign to column name labels original labels (TRUE) or not (FALSE).}
+
+\item{tabextract}{select the table number to extract in order to override the table selection algorithm.}
 
 \item{savetodir}{save html data files to specified directory, i.e. "C:/Documents".}
 }

@@ -53,7 +53,7 @@ scrapmenupage <- function(url){
 }
 
 
-scrappage <- function(x, ttime, dnames, savetodir){
+scrappage <- function(x, ttime, dnames, savetodir, tabextract){
   webpage <- scraperf(x$url)
 
   if (savetodir!=""){
@@ -80,7 +80,9 @@ scrappage <- function(x, ttime, dnames, savetodir){
     t2<-unlist(lapply(tbls, function(x) dim(x)[1]))
     t3<-unlist(lapply(tbls, function(x) any(grepl(tab_key, Transliterate(as.character(x))))))
 
-    tbl <- tryCatch(tbls[[which(t1>.2 & t2>10 & t3)]], error = function(e) e)
+    if(!is.null(tabextract)){tabnum=tabextract}else{tabnum=which(t1>.2 & t2>10 & t3)}
+
+    tbl <- tryCatch(tbls[[tabnum]], error = function(e) e)
     if(inherits(tbl,  "error")){
       tbl <- tryCatch(tbls[[t3]], error = function(e) e)
       if(inherits(tbl,  "error")){
@@ -125,11 +127,12 @@ scrappage <- function(x, ttime, dnames, savetodir){
   names_vector<-c(data_info_names, names_x, res_names)
 
   res_return<-data.frame(t(c(data_info, unname(unlist(x)), res)))
+  names_vector <- gsub("^\\s+|\\s+$","", names_vector)
   colnames(res_return)<-names_vector
   return(res_return)}
 
 
-scrappage_fast <- function(x, ttime, dnames, savetodir){
+scrappage_fast <- function(x, ttime, dnames, savetodir, tabextract){
   if(is.character(x) & length(x)==1){
     webpage <- scraperf(x)
   }else{
@@ -153,17 +156,19 @@ scrappage_fast <- function(x, ttime, dnames, savetodir){
   tbln <- webpage %>% html_nodes(xpath="//table")
 
   if(ttime==FALSE){
-    list_results<-sapply(
-      sapply(tbln[length(tbln)],
-             function(x) {x %>% html_nodes("tr")}),
-      function(x) {x%>%html_nodes("nobr")%>% html_text()})
+    if(!is.null(tabextract)){tabnum=tabextract
+    }else{
+      tabnum <- which(unlist(lapply(tbln, function(x) grepl("overflow:scroll",x))))
+      tabnum <- tabnum[length(tabnum)]
+      tabnum=tabextract}
+    list_results<-sapply(sapply(tbln[tabnum],
+                                function(x) {x %>% html_nodes("tr")}),
+                         function(x) {x%>%html_nodes("nobr")%>% html_text()})
 
-    col_names<-unlist(lapply(sapply(sapply(tbln[length(tbln)-1],
+    col_names<-unlist(lapply(sapply(sapply(tbln[tabnum-1],
                                            function(x) {x %>% html_nodes("tr")}),
                                     function(x) {x%>%html_nodes("nobr")%>% html_text()}),
                              function(x) {x[2]}))
-
-
     na_pos <- which(lapply(list_results, function(x) length(x))==0)
     list_results[[na_pos]]<-rep(NA,length(list_results[[1]]))
 
@@ -198,7 +203,8 @@ scrappage_fast <- function(x, ttime, dnames, savetodir){
     colnames(res_return)<-names_vector
 
   }else{
-    tbls<-tbln[length(tbln)]
+    if(!is.null(tabextract)){tabnum=tabextract}else{tabnum=length(tbln)}
+    tbls<-tbln[tabnum]
     tbl<-tbls%>%html_table(fill = TRUE)
     tbl<-apply(tbl[[1]],2, function(x) gsub("\\%", "", x))
     tbl <- tbl[,-1]
@@ -222,14 +228,15 @@ scrappage_fast <- function(x, ttime, dnames, savetodir){
     res_names[1]<-"link"
   }
 
-  names_vector<-c(data_info_names, names_x, res_names)
+  names_vector <- c(data_info_names, names_x, res_names)
+  names_vector <- gsub("^\\s+|\\s+$","", names_vector)
   colnames(res_return)<-names_vector
 
   invisible(gc())
   return(res_return)}
 
 
-contentextractor<-function(x, uplevel, ttime, typedata, dnames, savetodir){
+contentextractor<-function(x, uplevel, ttime, typedata, dnames, savetodir, tabextract){
   errorf<-function(y){
     max_el<-max(unlist(lapply(y, function(x){length(x[!is.na(x)])})))
     errorM<-lapply(y, function(x){
@@ -240,15 +247,15 @@ contentextractor<-function(x, uplevel, ttime, typedata, dnames, savetodir){
     return(errorM)}
 
   if (is.character(x) & typedata=="slow"){
-    list.vote_content <- scrappage(x, ttime, savetodir)}
+    list.vote_content <- scrappage(x, ttime, savetodir, tabextract)}
 
   if (is.character(x) & typedata=="fast"){
-    list.vote_content <- scrappage_fast(x, ttime, savetodir)}
+    list.vote_content <- scrappage_fast(x, ttime, savetodir, tabextract)}
 
   #regular data frame
   if (is.data.frame(x) & typedata=="slow"){
     list.vote_content<-lapply(1:dim(x)[1], function(iter) {
-      k=as.data.frame(scrappage(x[iter,], ttime, dnames, savetodir));
+      k=as.data.frame(scrappage(x[iter,], ttime, dnames, savetodir, tabextract));
       cat(paste("scraping page N", iter, "of", uplevel, sep=" "), "\n")
       return(k)})%>%errorf()
 
@@ -257,12 +264,12 @@ contentextractor<-function(x, uplevel, ttime, typedata, dnames, savetodir){
     }
 
     return.content <- data.frame(do.call(rbind,list.vote_content))
-    colnames(return.content)<-names(scrappage(x[1,], ttime, dnames, savetodir))
+    colnames(return.content)<-names(scrappage(x[1,], ttime, dnames, savetodir, tabextract))
   }
   #fast download
   if(is.data.frame(x) & typedata=="fast"){
     list.vote_content<-lapply(1:dim(x)[1], function(iter) {
-      k=as.data.frame(scrappage_fast(x[iter,], ttime, dnames, savetodir));
+      k=as.data.frame(scrappage_fast(x[iter,], ttime, dnames, savetodir, tabextract));
       cat(paste("scraping page N", iter, "of", uplevel, sep=" "), "\n")
       return(k)})
 
@@ -270,7 +277,7 @@ contentextractor<-function(x, uplevel, ttime, typedata, dnames, savetodir){
     if (length(unique(sapply(el, length)))>1) {warning('Rows sizes across units vary.')}
 
     return.content <- data.frame(do.call(rbind,list.vote_content))
-    colnames(return.content)<-names(scrappage_fast(x[1,], ttime, dnames, savetodir))}
+    colnames(return.content)<-names(scrappage_fast(x[1,], ttime, dnames, savetodir, tabextract))}
 
 
   selcols<-colnames(return.content)[!grepl("info|level|link|url", colnames(return.content))]
