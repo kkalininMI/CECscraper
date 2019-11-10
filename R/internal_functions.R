@@ -54,7 +54,10 @@ scrapmenupage <- function(url){
 
 
 scrappage <- function(x, ttime, dnames, savetodir, tabextract){
-  webpage <- scraperf(x$url)
+
+  webpage <- tryCatch(scraperf(x$url), error = function(e) e)
+  if(inherits(webpage,  "error")){return("error")}
+
 
   if (savetodir!=""){
     file_name=paste0(savetodir, "/file", "_", filecounter, ".html", sep="")
@@ -72,7 +75,10 @@ scrappage <- function(x, ttime, dnames, savetodir, tabextract){
   tbln <- webpage %>% html_nodes(xpath="//table")
   tbln_tk <- which(grepl(tab_key, Transliterate(as.character(tbln))))
   num_tbln_tk <- tbln_tk[length(tbln_tk)]
-  tbls<-tbln[c(num_tbln_tk+1):length(tbln)]%>%html_table(fill = TRUE)
+  tbls<- tryCatch(tbln[c(num_tbln_tk+1):length(tbln)]%>%html_table(fill = TRUE), error = function(e) e)
+  if(inherits(tbls,  "error")){return("error")}
+
+
 
   if(ttime==FALSE){
     tab_key <- "Chislo izbiratel|Chislo byulleteney"
