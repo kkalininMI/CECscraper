@@ -34,7 +34,7 @@ scrapregion <- function(url){
   urlR <- webpage %>%html_nodes("a") %>% html_text( "href")%>%
     stri_trans_general("russian-latin/bgn")%>%
     { gsub('^\\s+|\\s+$','', .) }
-  gr_expr="Respublik|respublik|oblast|Oblast|Kray|kray|Sankt|sankt|Mosk|mosk|Sevas|sevas"
+  gr_expr="Respublik|respublik|oblast|Oblast|Kray|kray|Sankt|sankt|Mosk|mosk|Sevas|sevas|okrug|Okrug"
   reg<-tibble(level1=urlR[grepl(gr_expr, urlR)])
   if(is.data.frame(reg) && nrow(reg)==0){reg="None"}
   return(reg)}
