@@ -74,11 +74,15 @@ scrappage <- function(x, ttime, dnames, savetodir, tabextract){
   tab_key <- "Data golosovaniya"
   tbln <- webpage %>% html_nodes(xpath="//table")
   tbln_tk <- which(grepl(tab_key, Transliterate(as.character(tbln))))
-  num_tbln_tk <- tbln_tk[length(tbln_tk)]
-  tbls<- tryCatch(tbln[c(num_tbln_tk+1):length(tbln)]%>%html_table(fill = TRUE), error = function(e) e)
-  if(inherits(tbls,  "error")){return("error")}
 
-
+  if(length(tbln_tk)!=0){
+    num_tbln_tk <- tbln_tk[length(tbln_tk)]
+    tbls<- tryCatch(tbln[c(num_tbln_tk+1):length(tbln)]%>%html_table(fill = TRUE), error = function(e) e)
+    if(inherits(tbls,  "error")){return("error")}
+    }else{
+    tbls<- tryCatch(tbln[1:length(tbln)]%>%html_table(fill = TRUE), error = function(e) e)
+    if(inherits(tbls,  "error")){return("error")}
+    }
 
   if(ttime==FALSE){
     tab_key <- "Chislo izbiratel|Chislo byulleteney"
@@ -115,10 +119,18 @@ scrappage <- function(x, ttime, dnames, savetodir, tabextract){
       res_names<-Transliterate(tbl[,2])
       res_names<-res_names[!res_names==""]
     }else{
-      which(tbl[,2]=="")
-      namesC<-paste0("C", 1:(which(tbl[,2]=="")-1), sep="")
-      namesP<-paste0("P", 1:(length(tbl[,2])-(which(tbl[,2]==""))), sep="")
-      res_names=c(namesC, namesP)
+      ind <- which(tbl[,2]=="")
+      if(length(ind)!=0){
+        namesC<-paste0("C", 1:(ind-1), sep="")
+        namesP<-paste0("P", 1:(length(tbl[,2])-(ind)), sep="")
+        res_names=c(namesC, namesP)
+        }
+      if(length(ind)==0){
+        ind <- which(tbl[,1]==""|is.na(tbl[,1]))
+        namesC<-paste0("C", 1:(ind-1), sep="")
+        namesP<-paste0("P", 1:(length(tbl[,2])-(ind)), sep="")
+        res_names=c(namesC, namesP)
+      }
     }}else{
       res_names<-paste0("T",1:4)
     }
@@ -135,6 +147,9 @@ scrappage <- function(x, ttime, dnames, savetodir, tabextract){
   res_return<-data.frame(t(c(data_info, unname(unlist(x)), res)))
   names_vector <- gsub("^\\s+|\\s+$","", names_vector)
   colnames(res_return)<-names_vector
+
+  re<-tryCatch(colnames(res_return)<-names_vector, error = function(e) e)
+
   return(res_return)}
 
 
