@@ -181,7 +181,7 @@ scrappage_fast <- function(x, ttime, dnames, savetodir, tabextract){
     }else{
       tabnum <- which(unlist(lapply(tbln, function(x) grepl("overflow:scroll",x))))
       tabnum <- tabnum[length(tabnum)]
-      tabnum=tabextract}
+      }
     list_results<-sapply(sapply(tbln[tabnum],
                                 function(x) {x %>% html_nodes("tr")}),
                          function(x) {x%>%html_nodes("nobr")%>% html_text()})
