@@ -1,4 +1,4 @@
-#' @title EFTformatter function
+#' @title eftFormatter function
 #' @description This function reformats the data for its use with Election Forensics Toolkit.
 #' @param x the object from Databuilder/DataMerger function.
 #' @param Nvalid valid votes computed using either "CEC" (using the Central Election Comission's formula); "AllVotes" (total number of votes cast for all candidates).
@@ -10,13 +10,16 @@
 #' library(CECscraper)
 #'
 #' Rurls<-"https://tinyurl.com/yy6roo3g"
-#' uiks<-MenuLinkExtractor(MenuLinkExtractor(MenuLinkExtractor(Rurls))[1:5,])
-#' uiks_voting<-PageLinkExtractor(uiks, "Rezul'taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
-#' uiks_voting_data<-DataBuilder(uiks_voting, bylevel="level1", ttime=FALSE)
-#' uiksEFT<-EFTformatter(uiks_voting_data)
+#' uiks<-listURLextractor(listURLextractor(listURLextractor(Rurls))[1:5,])
+#' uiks_voting<-rowURLextractor(uiks, "Rezul'taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
+#' uiks_voting_data<-dataBuilder(uiks_voting, bylevel="level1", ttime=FALSE)
+#' uiksEFT<-eftFormatter(uiks_voting_data)
 
 
-EFTformatter<-function(x, Nvalid="CEC", levels=TRUE){
+eftFormatter<-function(x, Nvalid="CEC", levels=TRUE){
+
+  cat("\n\nStarting eftFormatter()...\n\n");
+
   storage<-list()
   if(!is.list(x)) stop('the list of scrapped objs is required')
 

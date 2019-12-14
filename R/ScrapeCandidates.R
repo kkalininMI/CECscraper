@@ -1,4 +1,4 @@
-#' @title ScrapeCandidates function
+#' @title scrapeCandidates function
 #' @description This function extracts the candidate-related data information from the webpages.
 #' @param x url, list of urls
 #' @param tabextract select the table number to extract in order to override the table selection algorithm.
@@ -10,11 +10,14 @@
 #' library(CECscraper)
 #'
 #' url.moscow.candidates="https://tinyurl.com/yyhtfnwg"
-#' moscow.candidates<-ScrapeCandidates(url.moscow.candidates)
+#' moscow.candidates<-scrapeCandidates(url.moscow.candidates)
 
 
 
-ScrapeCandidates<-function(x, tabextract=NULL, savetodir=""){
+scrapeCandidates <- function(x, tabextract=NULL, savetodir=""){
+
+  cat("\n\nStarting scrapeCandidates()...\n\n")
+
   assign("filecounter", 1 , envir = .GlobalEnv)
 
   scraptable <- function(url, savetodir){
@@ -28,7 +31,7 @@ ScrapeCandidates<-function(x, tabextract=NULL, savetodir=""){
 
     t1<-unlist(lapply(tbls, function(x) sum(!is.na(x))/(dim(x)[1]*dim(x)[2])))
     t2<-unlist(lapply(tbls, function(x) dim(x)[1]))
-    t3<-lapply(tbls, function(x) any(apply(x, 2, function(y) grepl("FIO", Transliterate(y)))))
+    t3<-lapply(tbls, function(x) any(apply(x, 2, function(y) grepl("FIO", transliterate(y)))))
 
     if(!is.null(tabextract)){tabnum <- tabextract
     }else{
@@ -41,7 +44,7 @@ ScrapeCandidates<-function(x, tabextract=NULL, savetodir=""){
         tbl <- tryCatch(tbls[[length(tbls)]], error = function(e) e)
         if(inherits(tbl,  "error")){return("error")}
       }}
-    transliterated_tab<-apply(tbl, 2, Transliterate)
+    transliterated_tab<-apply(tbl, 2, transliterate)
     return(transliterated_tab)}
 
   scrapcand<-function(x){

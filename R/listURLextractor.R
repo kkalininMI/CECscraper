@@ -1,4 +1,4 @@
-#' @title MenuLinkExtractor function
+#' @title listURLextractor function
 #' @description This function extracts the links from the dropdown menu.
 #' @param x link, list of links or data frame with links
 #' @export
@@ -9,14 +9,18 @@
 #' library(CECscraper)
 #'
 #' murl<-"https://tinyurl.com/yy6roo3g"
-#' oiks<-MenuLinkExtractor(murl)
-#' rayons<-MenuLinkExtractor(MenuLinkExtractor(murl))
-#' uiks<-MenuLinkExtractor(MenuLinkExtractor(MenuLinkExtractor(murl))[1:5,])
+#' oiks<-listURLextractor(murl)
+#' rayons<-listURLextractor(listURLextractor(murl))
+#' uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
 
 
 
 
-MenuLinkExtractor<-function(x){
+listURLextractor<-function(x){
+
+  cat("\n\nStarting listURLextractor()...\n\n")
+
+  if("webscrape" %in% colnames(x)) {x <- x[x$webscrape,]}
 
   scrapFunction <- function (iter, a) {
     cat("scraping page N", iter, "\n")
@@ -31,7 +35,7 @@ MenuLinkExtractor<-function(x){
 
   if (is.character(x) & length(x)==1){
     links<-as.data.frame(scrapmenu(x))%>%filter(!is.na(url))
-    links$link<-Transliterate(links$link)
+    links$link<-transliterate(links$link)
   }
 
   if (is.character(x) & length(x)>1){
@@ -40,7 +44,7 @@ MenuLinkExtractor<-function(x){
     cat("scraping page N", iter, "\n")
     return(k)})
     links <- do.call(rbind,list.links)
-    links$link<-Transliterate(links$link)
+    links$link<-transliterate(links$link)
     names(links)[!grepl("url|link",names(links))] <- paste0("level",seq(1, length(names(links)[!grepl("url|link",names(links))]),1))
   }
 
@@ -55,12 +59,15 @@ MenuLinkExtractor<-function(x){
       list.links<-list.links[!unlist(lapply(list.links, function(x) class(x)[1]=="simpleError"))]
     }
     links <- do.call(rbind,list.links)
-    links$link<-Transliterate(links$link)
-    names(links)[!grepl("url|link",names(links))] <- paste0("level",seq(1, length(names(links)[!grepl("url|link",names(links))]),1))
+    links$link<-transliterate(links$link)
+    names(links)[!grepl("url|link",names(links))] <- paste0("level", seq(1, length(names(links)[!grepl("url|link",names(links))]),1))
   }
   links=apply(links, 2, function(x) as.character(x))%>%as.data.frame(stringsAsFactors = FALSE)
   row.names(links) <- NULL
 
+  links <- links[, order(names(links))]
+
   on.exit(closeAllConnections())
   invisible(gc())
+
   return(links)}

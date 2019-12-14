@@ -53,6 +53,43 @@ scrapmenupage <- function(url){
 }
 
 
+
+scrapwebpage <- function(webp){
+  url_ <- webp %>%
+    rvest::html_nodes("a") %>%
+    rvest::html_attr("href")
+
+  date_ <- webp %>%
+    rvest::html_nodes("td") %>%
+    rvest::html_text()%>%
+    { gsub('^\\s+|\\s+$','', .) }%>%
+    transliterate()
+
+  level2_ <- webp %>%
+    rvest::html_nodes("b") %>%
+    rvest::html_text()%>%
+    { gsub('^\\s+|\\s+$','', .) }%>%
+    transliterate()
+
+  datebool <- grepl("^[[:digit:]]+", date_)
+  datesV <- date_[datebool]
+  dates_tms <- c((diff(which(datebool))-1),
+                 (length(datebool)-which(datebool)[length(which(datebool))]))/2
+  dates_ <- rep(datesV, dates_tms)
+
+  webscrape_ <- TRUE
+
+  link_ <- webp %>%
+    rvest::html_nodes("a") %>%
+    rvest::html_text()%>%
+    { gsub('^\\s+|\\s+$','', .) }%>%
+    transliterate()
+
+  return(tibble(link = link_,  level1 = dates_,
+                level2 = level2_, webscrape = webscrape_,
+                url = url_))
+}
+
 scrappage <- function(x, ttime, dnames, savetodir, tabextract){
 
   webpage <- tryCatch(scraperf(x$url), error = function(e) e)
@@ -66,14 +103,14 @@ scrappage <- function(x, ttime, dnames, savetodir, tabextract){
   }
 
   #Data Info
-  data_info <- webpage %>% html_nodes("[class='w2']")%>%html_text(trim = TRUE)%>%Transliterate()
+  data_info <- webpage %>% html_nodes("[class='w2']")%>%html_text(trim = TRUE)%>%transliterate()
   data_info <- data_info[!data_info==""]
   if(length(data_info)>2){data_info <- data_info[1:2]}
 
   #Voting Info
   tab_key <- "Data golosovaniya"
   tbln <- webpage %>% html_nodes(xpath="//table")
-  tbln_tk <- which(grepl(tab_key, Transliterate(as.character(tbln))))
+  tbln_tk <- which(grepl(tab_key, transliterate(as.character(tbln))))
 
   if(length(tbln_tk)!=0){
     num_tbln_tk <- tbln_tk[length(tbln_tk)]
@@ -88,7 +125,7 @@ scrappage <- function(x, ttime, dnames, savetodir, tabextract){
     tab_key <- "Chislo izbiratel|Chislo byulleteney"
     t1<-unlist(lapply(tbls, function(x) sum(!is.na(x))/(dim(x)[1]*dim(x)[2])))
     t2<-unlist(lapply(tbls, function(x) dim(x)[1]))
-    t3<-unlist(lapply(tbls, function(x) any(grepl(tab_key, Transliterate(as.character(x))))))
+    t3<-unlist(lapply(tbls, function(x) any(grepl(tab_key, transliterate(as.character(x))))))
 
     if(!is.null(tabextract)){tabnum=tabextract}else{tabnum=which(t1>.2 & t2>10 & t3)}
 
@@ -116,7 +153,7 @@ scrappage <- function(x, ttime, dnames, savetodir, tabextract){
   #working with names
   if(ttime==FALSE){
     if(dnames){
-      res_names<-Transliterate(tbl[,2])
+      res_names<-transliterate(tbl[,2])
       res_names<-res_names[!res_names==""]
     }else{
       ind <- which(tbl[,2]=="")
@@ -168,7 +205,7 @@ scrappage_fast <- function(x, ttime, dnames, savetodir, tabextract){
 
 
   #Data Info
-  data_info <- webpage %>% html_nodes(xpath="//table")%>%html_nodes("[class='w2']")%>%html_text(trim = TRUE)%>%Transliterate()
+  data_info <- webpage %>% html_nodes(xpath="//table")%>%html_nodes("[class='w2']")%>%html_text(trim = TRUE)%>%transliterate()
   data_info <- data_info[!data_info==""]
   if(length(data_info)>2){data_info <- data_info[1:2]}
   if(length(data_info)>0){data_info_names=paste0("info", seq(1, length(data_info)))}else{data_info_names<-NULL}
@@ -196,12 +233,12 @@ scrappage_fast <- function(x, ttime, dnames, savetodir, tabextract){
     tbl <- t(do.call(rbind,list_results))
     if(is.vector(tbl)){tbl<-as.data.frame(tbl, row.names = NULL); colnames<-"C"}
     tbl <- tbl[,-na_pos]
-    if(is.vector(tbl)){tbl[1]<-Transliterate(as.character(tbl[1]))}else{
-      tbl[,1] <- Transliterate(as.character(tbl[,1]))
+    if(is.vector(tbl)){tbl[1]<-transliterate(as.character(tbl[1]))}else{
+      tbl[,1] <- transliterate(as.character(tbl[,1]))
     }
 
     if(dnames){
-      res_names<-Transliterate(col_names)
+      res_names<-transliterate(col_names)
       res_names<-res_names[!(res_names==""|is.na(res_names))]
     }else{
       namesC<-paste0("C", 1:(na_pos-2), sep="")
@@ -229,8 +266,8 @@ scrappage_fast <- function(x, ttime, dnames, savetodir, tabextract){
     tbl<-tbls%>%html_table(fill = TRUE)
     tbl<-apply(tbl[[1]],2, function(x) gsub("\\%", "", x))
     tbl <- tbl[,-1]
-    tbl[,1]=Transliterate(tbl[,1])
-    res_names<-paste(Transliterate(unname(unlist(tbl[1,]))), Transliterate(unname(unlist(tbl[2,]))), sep="")
+    tbl[,1]=transliterate(tbl[,1])
+    res_names<-paste(transliterate(unname(unlist(tbl[1,]))), transliterate(unname(unlist(tbl[2,]))), sep="")
     tbl=tbl[-c(1,2),]
 
     if(dnames){

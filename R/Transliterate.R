@@ -6,8 +6,10 @@
 #' @examples
 #' library(CECscraper)
 #'
-#' Transliterate("enter cyrillic text here")
+#' transliterate("enter cyrillic text here")
 
-Transliterate<-function(v){
-  stri_trans_general(
-    stri_trans_general(v, "russian-latin/bgn"),"Latin-ASCII")}
+transliterate<-function(v){
+                           gsub("\u00B7", "",
+                                stri_trans_general(
+                                  stri_trans_general(v, "russian-latin/bgn"),"Latin-ASCII"))
+                          }

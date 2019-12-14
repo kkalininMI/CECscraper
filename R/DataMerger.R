@@ -1,4 +1,4 @@
-#' @title DataMerger function
+#' @title dataMerger function
 #' @description This function merges the list of data objects together.
 #' @param x the list of data objects.
 #' @param byrow   the list is merged by row or by column.  If byrow==FALSE only two objects must be put into the list.
@@ -10,25 +10,28 @@
 #'
 #' #Example 1
 #' murl<-"https://tinyurl.com/yy6roo3g"
-#' uiks<-MenuLinkExtractor(MenuLinkExtractor(MenuLinkExtractor(murl))[1:5,])
+#' uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
 #'
-#' uiks_turnout<-PageLinkExtractor(uiks, "Dannyye ob otkrytii pomeshcheniy dlya golosovaniya")
-#' uiks_voting<-PageLinkExtractor(uiks, "Rezul'taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
+#' uiks_turnout<-rowURLextractor(uiks, "Dannyye ob otkrytii pomeshcheniy dlya golosovaniya")
+#' uiks_voting<-rowURLextractor(uiks, "Rezul'taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
 #'
-#' uiks_turnout_data<-DataBuilder(uiks_turnout, bylevel="level1", ttime=TRUE)
-#' uiks_voting_data<-DataBuilder(uiks_voting, bylevel="level1", ttime=FALSE)
-#' uiks_merged<-DataMerger(list(uiks_voting_data,uiks_turnout_data), byrow=FALSE)
+#' uiks_turnout_data<-dataBuilder(uiks_turnout, bylevel="level1", ttime=TRUE)
+#' uiks_voting_data<-dataBuilder(uiks_voting, bylevel="level1", ttime=FALSE)
+#' uiks_merged<-dataMerger(list(uiks_voting_data,uiks_turnout_data), byrow=FALSE)
 #'
 #' #Example 2
 #' # library(dplyr)
 #' # murl="https://tinyurl.com/y369jngp"
-#' #fast_downloadT<-PageLinkExtractor(murl, "Predvaritel'nyye svedeniya ob uchastii izbirateley")%>%
-#' #                 MenuLinkExtractor()%>%MenuLinkExtractor()%>%sample_n(100, replace = FALSE)%>%
-#' #                 PageLinkExtractor("sayt izbiratel'noy komissii sub\"yekta Rossiyskoy Federatsii")%>%
-#' #                 DataBuilder(typedata="fast", bylevel="level2", ttime=TRUE)%>%DataMerger()
+#' #fast_downloadT<-rowURLextractor(murl, "Predvaritel'nyye svedeniya ob uchastii izbirateley")%>%
+#' #                 listURLextractor()%>%listURLextractor()%>%sample_n(100, replace = FALSE)%>%
+#' #                 rowURLextractor("sayt izbiratel'noy komissii sub\"yekta Rossiyskoy Federatsii")%>%
+#' #                 dataBuilder(typedata="fast", bylevel="level2", ttime=TRUE)%>%dataMerger()
 
 
-DataMerger<-function(x, byrow=TRUE){
+dataMerger<-function(x, byrow = TRUE){
+
+  cat("\n\nStarting dataMerger()...\n\n")
+
   storage<-list()
   if(!is.list(x)) stop('the list of scrapped objs is required')
 
@@ -76,5 +79,6 @@ DataMerger<-function(x, byrow=TRUE){
   }
 
   rownames(storage) <- NULL
-  return_result=list(data=storage, bylevel=levelvar, mergedate=Sys.time())
+  return_result <- list(data=storage, bylevel=levelvar, mergedate=Sys.time())
+
   return(return_result)}
