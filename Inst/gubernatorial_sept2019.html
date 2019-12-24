@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)http://www.vybory.izbirkom.ru/region/izbirkom -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<!--<base href="http://www.vybory.izbirkom.ru/">--><base href=".">
+<link href="./gubernatorial_sept2019_files/report.css" rel="stylesheet" type="text/css">
+<title>Сведения о проводящихся выборах и референдумах</title>
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+
+<script type="text/javascript" async="" src="./gubernatorial_sept2019_files/ga.js.download"></script><script type="text/javascript">
+	
+		function open_close(group_id)
+		{			
+			folder = document.getElementById(group_id + "1");
+			i = 1;
+			while (folder != null) {
+				if (folder.className == 'trFinrepHidden') {
+					folder.className = 'trFinrep';
+				} else {
+					folder.className = 'trFinrepHidden';
+				}
+				i++;		
+				folder = document.getElementById(group_id + "" + i);		
+			}		
+		}
+	
+</script>
+
+</head>
+
+<body text="#000000" link="#0000ff" vlink="#0000ff" alink="#ff0000" leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" bottommargin="0">
+
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+	<tbody><tr>
+		<td align="center" width="100%">
+			
+		</td>
+	</tr>
+</tbody></table>
+
+
+		
+
+
+
+
+
+<link href="./gubernatorial_sept2019_files/00.css" rel="stylesheet" type="text/css">
+<link type="text/css" rel="stylesheet" href="./gubernatorial_sept2019_files/PTS75F_stylesheet.css">
+
+<div class="ib-header">
+    <div class="ib-header-wrapper">
+        <a class="ib-header-cik" href="http://cikrf.ru/">
+            <img src="./gubernatorial_sept2019_files/header_bg.jpg" alt="">
+        </a>
+		<a class="ib-header-link" href="http://www.vybory.izbirkom.ru/region/izbirkom">Выборы, референдумы и иные формы прямого волеизъявления</a>
+		
+    </div>
+</div>
+
+
+
+
+<table width="100%" cellpadding="0" cellspacing="0" height="80%" style="padding-left: 3px; padding-right: 3px;">
+	
+		<tbody><tr valign="top" height="20px">
+			<td width="100%" align="center" height="20px" valign="top">
+			
+				
+			
+			</td>
+		</tr>
+	
+	<tr valign="top" height="100%">
+		<td valign="top" height="100%">
+			<center> <table bgcolor="#ffffff" width="100%" cellpadding="2" style="border-color: black; border: 1px outset #000000;" cellspacing="1" border="0"><tbody><tr><td align="center" class="headers" bgcolor="#555555"><b>Календарь выборов (8.9.2019 - 8.9.2019)</b></td></tr><tr bgcolor="#dddddd"><td align="center"><div style="width:500px;height:78px;overflow:auto;"><table border="0" cellpadding="2" cellspacing="1" width="100%" bgcolor="#ffffff" style="border-color: black; border: 1px outset #000000;cursor:hand"><tbody><tr><td colspan="1" align="center" style="cursor:hand" bgcolor="#555555" class="headers" onclick="initDate4Href(&#39;01.01.2019&#39;, &#39;31.12.2019&#39;)">2019</td></tr><tr class="w2" bgcolor="#dddddd"><td colspan="1" align="center" style="cursor:hand" onclick="initDate4Href(&#39;01.09.2019&#39;, &#39;30.09.2019&#39;)">Сентябрь</td></tr><tr><td align="center" class="oldDay" onclick="initDate4Href(&#39;08.09.2019&#39;, &#39;08.09.2019&#39;)">8</td></tr></tbody></table></div></td></tr></tbody></table></center><script type="text/javascript" src="./gubernatorial_sept2019_files/jquery-1.11.2.min.js.download"></script>
+<script type="text/javascript" src="./gubernatorial_sept2019_files/jquery.sumoselect.js.download"></script>
+<script type="text/javascript" src="./gubernatorial_sept2019_files/datepicker.js.download"></script>
+<script type="text/javascript" src="./gubernatorial_sept2019_files/datepicker-ru.js.download"></script>
+<script type="text/javascript" src="./gubernatorial_sept2019_files/cal.js.download"></script>
+<script type="text/javascript" src="./gubernatorial_sept2019_files/all.js.download"></script>
+
+<style type="text/css"> @import url("styles/main.css"); </style>
+<style type="text/css"> @import url("css/cal/core.css"); </style>
+<style type="text/css"> @import url("css/cal/theme.css"); </style>
+<style type="text/css"> @import url("css/cal/sumoselect.css"); </style>
+<style type="text/css"> @import url("css/cal/cal.css"); </style>
+<style type="text/css"> @import url("css/cal/datepicker.css"); </style>
+
+<!--[if gte IE 8]><!-->
+<script type="text/javascript">
+	function processMultiSelectClick(clickedLi, selector){
+		if (clickedLi.previousSibling) {
+			selector.sumo.unSelectItem(0);
+			if (!$(selector).val()) {
+				selector.sumo.selectItem(0);
+			}
+		} else {
+			selector.sumo.unSelectAll();
+			selector.sumo.selectItem(0);
+		}
+	};
+	$(document).ready(function() {
+		$("#urovproved").attr("multiple", "multiple");
+		var urovprovedSelect = $("#urovproved").SumoSelect();
+		/* SumoSelect игнорирует множественный выбор, если атрибут multiple устанавливается программно.
+		* Поэтому необходимо пройтись по оригинальному select и выбрать все selected опции
+		*/
+		$("#urovproved option").each(function() { 
+			if ($(this).attr("selected") == "selected") {
+				urovprovedSelect.sumo.selectItem($(this).index());
+			}
+		});
+		$(urovprovedSelect).parent().find("li").click(function() {
+			processMultiSelectClick(this, urovprovedSelect);
+		});
+		$("#vidvibref").attr("multiple", "multiple");
+		var vidvibSelect = $("#vidvibref").SumoSelect();
+		/* SumoSelect игнорирует множественный выбор, если атрибут multiple устанавливается программно.
+		* Поэтому необходимо пройтись по оригинальному select и выбрать все selected опции
+		*/
+		$("#vidvibref option").each(function() { 
+			if ($(this).attr("selected") == "selected") {
+				vidvibSelect.sumo.selectItem($(this).index());
+			}
+		});
+		$(vidvibSelect).parent().find("li").click(function() {
+			processMultiSelectClick(this, vidvibSelect);
+		})
+		$("#vibtype").SumoSelect();
+		$("#sxemavib").SumoSelect();
+	});
+</script>
+<!--<![endif]-->
+
+<form name="calendar" method="POST" action="http://www.vybory.izbirkom.ru/region/izbirkom" style="margin:20px 0">
+<table id="w_1" style="background-color: #dddddd; width: 100%" cellpadding="0" cellspacing="1">
+	<tbody>
+		<tr>
+			<td bgcolor="white">
+			<table style="background-color: #dddddd" border="0" cellpadding="2" cellspacing="0">
+				<tbody>
+					<tr>
+						<td align="right" valign="top"><b>Начальная дата</b></td>
+						<td width="100%" valign="top" colspan="2">
+						<input id="start_date" type="text" value="08.09.2019" name="start_date" class="hasDatepicker">
+						</td>
+						<td bgcolor="#dddddd"><img src="./gubernatorial_sept2019_files/e.gif" height="10" width="10"></td>
+						<td rowspan="3" valign="top"><b>Уровень выборов:</b><br>
+						<div class="SumoSelect" tabindex="0"><select style="width: 250px; display: none;" name="urovproved" id="urovproved" multiple="multiple">
+							<option value="all">все</option>
+							<option value="1">Федеральный</option>
+							<option value="2" selected="selected">Региональный</option>
+							<option value="3">Административный центр</option>
+							<option value="4">Местное самоуправление</option>
+						</select><p class="CaptionCont SlectBox" style="width: 250px;"><span>Региональный </span><label><i></i></label></p><div class="optWrapper multiple"><ul class="options"><li data-val="all"><span><i></i></span><label>все</label></li><li data-val="1"><span><i></i></span><label>Федеральный</label></li><li data-val="2" class="selected"><span><i></i></span><label>Региональный</label></li><li data-val="3"><span><i></i></span><label>Административный центр</label></li><li data-val="4"><span><i></i></span><label>Местное самоуправление</label></li></ul><div class="MultiControls"><p class="btnOk">OK</p><p class="btnCancel">Cancel</p></div></div></div><br><br><b>Вид выборов/референдумов<br> и иных форм прямого волеизъявления:</b><br>
+						<div class="SumoSelect" tabindex="0"><select style="width: 250px; display: none;" name="vidvibref" id="vidvibref" multiple="multiple">
+							<option value="all">все</option>
+							<option value="0">Референдум</option>
+							<option value="1" selected="selected">Выборы на должность</option>
+							<option value="2">Выборы депутата</option>
+							<option value="3">Отзыв депутата</option>
+							<option value="4">Отзыв должностного лица</option>
+						</select><p class="CaptionCont SlectBox" style="width: 250px;"><span>Выборы на должность </span><label><i></i></label></p><div class="optWrapper multiple"><ul class="options"><li data-val="all"><span><i></i></span><label>все</label></li><li data-val="0"><span><i></i></span><label>Референдум</label></li><li data-val="1" class="selected"><span><i></i></span><label>Выборы на должность</label></li><li data-val="2"><span><i></i></span><label>Выборы депутата</label></li><li data-val="3"><span><i></i></span><label>Отзыв депутата</label></li><li data-val="4"><span><i></i></span><label>Отзыв должностного лица</label></li></ul><div class="MultiControls"><p class="btnOk">OK</p><p class="btnCancel">Cancel</p></div></div></div><br><br><b>Тип выборов:</b><br>
+						<div class="SumoSelect" tabindex="0"><select style="width: 250px; display: none;" name="vibtype" id="vibtype" size="1">
+							<option value="all" selected="selected">все</option>
+							<option value="1">Основные</option>
+							<option value="2">Основные повторные</option>
+							<option value="3">Основные отложенные</option>
+							<option value="4">Основные отдельные</option>
+							<option value="5">Дополнительные</option>
+							<option value="6">Дополнительные повторные</option>
+							<option value="7">Довыборы</option>
+							<option value="8">Повторное голосование</option>
+							<option value="9">Основные выборы и повторное голосование</option>
+						</select><p class="CaptionCont SlectBox" style="width: 250px;"><span>все</span><label><i></i></label></p><div class="optWrapper"><ul class="options"><li data-val="all" class="selected"><label>все</label></li><li data-val="1"><label>Основные</label></li><li data-val="2"><label>Основные повторные</label></li><li data-val="3"><label>Основные отложенные</label></li><li data-val="4"><label>Основные отдельные</label></li><li data-val="5"><label>Дополнительные</label></li><li data-val="6"><label>Дополнительные повторные</label></li><li data-val="7"><label>Довыборы</label></li><li data-val="8"><label>Повторное голосование</label></li><li data-val="9"><label>Основные выборы и повторное голосование</label></li></ul></div></div>
+						<img src="./gubernatorial_sept2019_files/e.gif" height="1" width="264"></td>
+					</tr>
+					<tr>
+						<td align="right" valign="top"><b>Конечная дата</b></td>
+						<td valign="top" colspan="2">
+							<input id="end_date" type="text" value="08.09.2019" name="end_date" class="hasDatepicker">
+						</td>
+						<td bgcolor="#dddddd"></td>
+					</tr>
+					<tr><td align="right" valign="top"><b><nobr>&nbsp;&nbsp;&nbsp;Выберите субъект или</nobr><br>группу субъектов</b></td><td colspan="2"><select name="actual_regions_subjcode" size="7" multiple="multiple" style="FONT-SIZE: 8pt; WIDTH: 484px; FONT-FAMILY: MS Sans Serif, Arial; HEIGHT: 62px; min-hight: 100px"><option value="0^^1^^2^^3^^4^^5^^6^^7^^8^^9^^10^^11^^93^^12^^13^^14^^15^^16^^17^^18^^19^^20^^21^^22^^92^^91^^23^^24^^90^^25^^26^^27^^28^^29^^30^^31^^32^^33^^34^^35^^36^^37^^38^^39^^40^^42^^43^^44^^45^^46^^47^^48^^49^^50^^51^^52^^53^^54^^55^^56^^57^^58^^60^^61^^62^^63^^64^^65^^66^^67^^68^^69^^70^^71^^72^^73^^74^^76^^77^^78^^94^^79^^83^^85^^86^^87^^89">Все</option><option value="0">Российская Федерация</option><option value="1">Республика Адыгея (Адыгея)</option><option value="2">Республика Алтай</option><option value="3">Республика Башкортостан</option><option value="4">Республика Бурятия</option><option value="5">Республика Дагестан</option><option value="6">Республика Ингушетия</option><option value="7">Кабардино-Балкарская Республика</option><option value="8">Республика Калмыкия</option><option value="9">Карачаево-Черкесская Республика</option><option value="10">Республика Карелия</option><option value="11">Республика Коми</option><option value="93">Республика Крым</option><option value="12">Республика Марий Эл</option><option value="13">Республика Мордовия</option><option value="14">Республика Саха (Якутия)</option><option value="15">Республика Северная Осетия-Алания</option><option value="16">Республика Татарстан (Татарстан)</option><option value="17">Республика Тыва</option><option value="18">Удмуртская Республика</option><option value="19">Республика Хакасия</option><option value="20">Чеченская Республика</option><option value="21">Чувашская Республика - Чувашия</option><option value="22">Алтайский край</option><option value="92">Забайкальский край</option><option value="91">Камчатский край</option><option value="23">Краснодарский край</option><option value="24">Красноярский край</option><option value="90">Пермский край</option><option value="25">Приморский край</option><option value="26">Ставропольский край</option><option value="27">Хабаровский край</option><option value="28">Амурская область</option><option value="29">Архангельская область</option><option value="30">Астраханская область</option><option value="31">Белгородская область</option><option value="32">Брянская область</option><option value="33">Владимирская область</option><option value="34">Волгоградская область</option><option value="35">Вологодская область</option><option value="36">Воронежская область</option><option value="37">Ивановская область</option><option value="38">Иркутская область</option><option value="39">Калининградская область</option><option value="40">Калужская область</option><option value="42">Кемеровская область</option><option value="43">Кировская область</option><option value="44">Костромская область</option><option value="45">Курганская область</option><option value="46">Курская область</option><option value="47">Ленинградская область</option><option value="48">Липецкая область</option><option value="49">Магаданская область</option><option value="50">Московская область</option><option value="51">Мурманская область</option><option value="52">Нижегородская область</option><option value="53">Новгородская область</option><option value="54">Новосибирская область</option><option value="55">Омская область</option><option value="56">Оренбургская область</option><option value="57">Орловская область</option><option value="58">Пензенская область</option><option value="60">Псковская область</option><option value="61">Ростовская область</option><option value="62">Рязанская область</option><option value="63">Самарская область</option><option value="64">Саратовская область</option><option value="65">Сахалинская область</option><option value="66">Свердловская область</option><option value="67">Смоленская область</option><option value="68">Тамбовская область</option><option value="69">Тверская область</option><option value="70">Томская область</option><option value="71">Тульская область</option><option value="72">Тюменская область</option><option value="73">Ульяновская область</option><option value="74">Челябинская область</option><option value="76">Ярославская область</option><option value="77">город Москва</option><option value="78">город Санкт-Петербург</option><option value="94">город Севастополь</option><option value="79">Еврейская автономная область</option><option value="83">Ненецкий автономный округ</option><option value="85">Усть-Ордынский Бурятский автономный округ</option><option value="86">Ханты-Мансийский автономный округ</option><option value="87">Чукотский автономный округ</option><option value="89">Ямало-Ненецкий автономный округ</option></select></td><td bgcolor="#dddddd"></td></tr>
+					<tr><td align="right" valign="top"><b><nobr>&nbsp;&nbsp;&nbsp;Объединившиеся субъекты</nobr><br></b></td><td colspan="2"><select name="old_regions_subjcode" size="7" multiple="multiple" style="FONT-SIZE: 8pt; WIDTH: 484px; FONT-FAMILY: MS Sans Serif, Arial; HEIGHT: 62px; min-hight: 100px"><option value="41^^59^^75^^80^^81^^82^^84^^88">Все</option><option value="41">Камчатская область</option><option value="59">Пермская область</option><option value="75">Читинская область</option><option value="80">Агинский Бурятский автономный округ</option><option value="81">Коми-Пермяцкий автономный округ</option><option value="82">Корякский автономный округ</option><option value="84">Таймырский (Долгано-Ненецкий) автономный округ</option><option value="88">Эвенкийский автономный округ</option></select></td><td bgcolor="#dddddd"></td></tr>
+					<tr bgcolor="#dddddd">
+						<td align="right"><nobr><b>Система выборов:</b></nobr></td>
+						<td colspan="5"><div class="SumoSelect" tabindex="0"><select name="sxemavib" id="sxemavib" style="width: 580px; display: none;">
+							<option value="all" selected="selected">все</option>
+							<option value="1">мажоритарная</option>
+							<option value="5">мажоритарная - по общерегиональному округу и по
+							отдельным избирательным округам</option>
+							<option value="4">мажоритарная по общерегиональному округу</option>
+							<option value="2">пропорциональная</option>
+							<option value="3">смешанная - пропорциональная и мажоритарная</option>
+							<option value="6">пропорциональная и мажоритарная по общерегиональному округу и отдельным избирательным округам</option>
+						</select><p class="CaptionCont SlectBox" style="width:580px"><span>все</span><label><i></i></label></p><div class="optWrapper"><ul class="options"><li data-val="all" class="selected"><label>все</label></li><li data-val="1"><label>мажоритарная</label></li><li data-val="5"><label>мажоритарная - по общерегиональному округу и по
+							отдельным избирательным округам</label></li><li data-val="4"><label>мажоритарная по общерегиональному округу</label></li><li data-val="2"><label>пропорциональная</label></li><li data-val="3"><label>смешанная - пропорциональная и мажоритарная</label></li><li data-val="6"><label>пропорциональная и мажоритарная по общерегиональному округу и отдельным избирательным округам</label></li></ul></div></div></td>
+					</tr>
+					<tr bgcolor="#dddddd">
+					<input type="hidden" value="search_by_calendar" name="action">
+					<input type="hidden" value="0" name="region">
+						<td colspan="6" align="center"><input name="ok" value="Искать" type="submit"></td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</form>
+<table><tbody><tr><td class="resultsCount"><b><nobr>Всего найдено записей: 16</nobr></b></td></tr></tbody></table><table cellpadding="2" cellspacing="1" border="0" bgcolor="white" align="left" style="border-color: black; border: 1px outset #000000; margin-right:-3px;"><tbody><tr bgcolor="#555555"><td colspan="2" class="dateField" align="center"> 8 сентября 2019 года</td></tr><tr><td><nobr><b>Республика Алтай</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=2042000428868&amp;region=2&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Главы Республики Алтай, Председателя Правительства Республики Алтай </a></td></tr><tr><td><nobr><b>Республика Башкортостан</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=20220002169314&amp;region=3&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Главы Республики Башкортостан</a></td></tr><tr><td><nobr><b>Республика Калмыкия</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=2082000532707&amp;region=8&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Главы Республики Калмыкия</a></td></tr><tr><td><nobr><b>Забайкальский край</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=27520001161903&amp;region=92&amp;prver=0&amp;pronetvd=null" class="vibLink">Досрочные выборы Губернатора Забайкальского края</a></td></tr><tr><td><nobr><b>Ставропольский край</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=22620001146253&amp;region=26&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Губернатора Ставропольского края</a></td></tr><tr><td><nobr><b>Астраханская область</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=23020001087617&amp;region=30&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Губернатора Астраханской области</a></td></tr><tr><td><nobr><b>Волгоградская область</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=23420001503592&amp;region=34&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Губернатора Волгоградской области</a></td></tr><tr><td><nobr><b>Вологодская область</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=23520001251383&amp;region=35&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Губернатора Вологодской области</a></td></tr><tr><td><nobr><b>Курганская область</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=24520001039775&amp;region=45&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Губернатора Курганской области</a></td></tr><tr><td><nobr><b>Курская область</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=24620001066257&amp;region=46&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Губернатора Курской области (руководителя Администрации Курской области)</a></td></tr><tr><td><nobr><b>Липецкая область</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=2482000790602&amp;region=48&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы главы администрации Липецкой области </a></td></tr><tr><td><nobr><b>Мурманская область</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=2512000569729&amp;region=51&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Губернатора Мурманской области</a></td></tr><tr><td><nobr><b>Оренбургская область</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=25620001302573&amp;region=56&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Губернатора Оренбургской области</a></td></tr><tr><td><nobr><b>Сахалинская область</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=2652000516202&amp;region=65&amp;prver=0&amp;pronetvd=null" class="vibLink">Досрочные выборы Губернатора Сахалинской области</a></td></tr><tr><td><nobr><b>Челябинская область</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=27420001541192&amp;region=74&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы Губернатора Челябинской области</a></td></tr><tr><td><nobr><b>город Санкт-Петербург</b></nobr></td><td><a href="http://www.vybory.izbirkom.ru/region/izbirkom?action=show&amp;vrn=27820001217413&amp;region=78&amp;prver=0&amp;pronetvd=null" class="vibLink">Выборы высшего должностного лица Санкт-Петербурга - Губернатора Санкт-Петербурга</a></td></tr></tbody></table>
+		</td>
+	</tr>
+</tbody></table>
+
+<br>
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-26136728-1']);
+  _gaq.push(['_setDomainName', 'izbirkom.ru']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+<div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div></body></html>
