@@ -1,6 +1,6 @@
 # CECscraper
 CECscraper is an open source tool for web scraping the data from the website of the Central Election Commission (CEC, CIK).  The package's functions help to implement a wide range of web-scrapping tasks related to different types of electoral data. The package's webscraping flexibility is based on the "constructor" principle, according to which any webscraping task can be divided into the sequence of basic webscrapping steps realized through the package's functions.  While using this package the user is expected  to follow the
-*[guidance for the ethic webscraping](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01) and fully comply with Central Election Commission's webscrapping guidelines.  
+[guidance for the ethic webscraping](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01) and fully comply with Central Election Commission's webscrapping guidelines.  
 
 ## I Extracting electoral data
 The webscraping of electoral data implies that the user constructs the webscraping algorithm using package's functions as building blocs.  The scraping procedure consists of two stages. On the first stage the user creates the data frame via the set of *URL extraction functions* that contains collection of target URLs and links (attributes directly linked to URLs), as well as attributes or information inherited from higher levels of data (called "level" or "info"). On the second stage the user is able to scrape and build the dataframe containing electoral data via the Data building function. 
