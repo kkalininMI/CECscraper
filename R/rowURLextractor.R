@@ -1,8 +1,8 @@
 #' @title rowURLextractor function
-#' @description This function extracts the links and urls from the page.
-#' @param x the list of urls or MenuListExtractor object.
+#' @description This function extracts link and url from the webpage's row defined by specific expression.
+#' @param x list of urls or MenuListExtractor object.
 #' @param item  link/expression that contains the url of interest.
-#' @param select select id of a single match among several identified by the algorithm.
+#' @param select if more than one matched rows are found, define which one to work with.
 #' @export
 #' @import dplyr
 #' @return Returns the data.frame object containing levels, links and urls.
@@ -42,7 +42,6 @@ rowURLextractor<-function(x, item, select = 1){
     row.names(nlink) <- NULL
   }
 
-
   if (is.data.frame(x)){
     list.links<-lapply(1:dim(x)[1], function(iter) {
       k<-as.data.frame(scrapmenupage(x$url[iter]))%>%filter(!is.na(url))
@@ -60,6 +59,9 @@ rowURLextractor<-function(x, item, select = 1){
     colnames(x)[colnames(x) == 'link'] <- paste0("level", max_level+1)
     nlink=data.frame(x[,level], links)%>%apply(2, function(x) as.character(x))%>%as.data.frame(stringsAsFactors = FALSE)
     nlink$link<-transliterate(links$link)
+
+    if(nrow(nlink)>ncol(nlink) & dim(x)[1]==1){nlink <- data.frame(t(nlink)); nlink$link[1] <- nlink$link[2]; nlink<-nlink[-2,]}
+
     row.names(nlink) <- NULL
   }
 

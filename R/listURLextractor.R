@@ -1,5 +1,5 @@
 #' @title listURLextractor function
-#' @description This function extracts the links from the dropdown menu.
+#' @description This function extracts links and urls from the lists/menus.
 #' @param x link, list of links or data frame with links
 #' @export
 #' @import dplyr
@@ -8,10 +8,10 @@
 #' #Example
 #' library(CECscraper)
 #'
-#' murl<-"https://tinyurl.com/yy6roo3g"
-#' oiks<-listURLextractor(murl)
-#' rayons<-listURLextractor(listURLextractor(murl))
-#' uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
+#' murl <- "https://tinyurl.com/yy6roo3g"
+#' oiks <- listURLextractor(murl)
+#' rayons <- listURLextractor(listURLextractor(murl))
+#' uiks <- listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
 
 
 

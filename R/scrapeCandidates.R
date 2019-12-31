@@ -1,11 +1,11 @@
 #' @title scrapeCandidates function
-#' @description This function extracts the candidate-related data information from the webpages.
-#' @param x url, list of urls
+#' @description This function extracts the candidate-related data from the webpages.
+#' @param x url, list of urls.
 #' @param tabextract select the table number to extract in order to override the table selection algorithm.
-#' @param savetodir save html downloaded data files in directory, i.e. "C:/Documents"
+#' @param savetodir save downloaded html files to directory, i.e. "C:/Documents".
 #' @export
 #' @import dplyr
-#' @return Returns the list with data.frame object and retrieval date.
+#' @return Returns the list containing the data.frame object and retrieval date.
 #' @examples
 #' library(CECscraper)
 #'

@@ -9,15 +9,15 @@ fileURLextractor(html_file, tabextract = NULL, hashid = FALSE)
 \arguments{
 \item{html_file}{html file object.}
 
-\item{tabextract}{select the table number to extract in order to override the table selection algorithm.}
+\item{tabextract}{a table number to extract in order to override the table selection algorithm (by default, 1).}
 
-\item{hashid}{generate md5 hash id for an election.}
+\item{hashid}{generate a unique md5 hash id for election (TRUE).}
 }
 \value{
 Returns the data.frame object containing levels, links and urls of elections.
 }
 \description{
-This function extracts the links and urls from the html page of the Central Election Commission.
+This function extracts the links and urls from an html page of the Central Election Commission.
 }
 \examples{
 library(CECscraper)

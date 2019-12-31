@@ -7,17 +7,17 @@
 rowURLextractor(x, item, select = 1)
 }
 \arguments{
-\item{x}{the list of urls or MenuListExtractor object.}
+\item{x}{list of urls or MenuListExtractor object.}
 
 \item{item}{link/expression that contains the url of interest.}
 
-\item{select}{select id of a single match among several identified by the algorithm.}
+\item{select}{if more than one matched rows are found, define which one to work with.}
 }
 \value{
 Returns the data.frame object containing levels, links and urls.
 }
 \description{
-This function extracts the links and urls from the page.
+This function extracts link and url from the webpage's row defined by specific expression.
 }
 \examples{
 library(CECscraper)

@@ -7,9 +7,9 @@
 dataMerger(x, byrow = TRUE)
 }
 \arguments{
-\item{x}{the list of data objects.}
+\item{x}{list of data objects.}
 
-\item{byrow}{the list is merged by row or by column.  If byrow==FALSE only two objects must be put into the list.}
+\item{byrow}{list is merged by row or by column.  If byrow==FALSE only two objects are merged into a list.}
 }
 \value{
 Returns the data.frame object with urls and links.

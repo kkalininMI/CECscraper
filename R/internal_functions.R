@@ -34,8 +34,10 @@ scrapregion <- function(url){
   urlR <- webpage %>%html_nodes("a") %>% html_text( "href")%>%
     stri_trans_general("russian-latin/bgn")%>%
     { gsub('^\\s+|\\s+$','', .) }
-  gr_expr="Respublik|respublik|oblast|Oblast|Kray|kray|Sankt|sankt|Mosk|mosk|Sevas|sevas|okrug|Okrug"
-  reg<-tibble(level1=urlR[grepl(gr_expr, urlR)])
+  gr_expr <- "Respublik|respublik|oblast|Oblast|Kray|kray|Sankt|sankt|Mosk|mosk|Sevas|sevas|okrug|Okrug"
+  wd_count <- lengths(gregexpr("\\W+", gsub("\u02B9|\u02BA","", urlR)))+1<4
+  #cap_count <- sapply(regmatches(urlR, gregexpr("[A-Z]", urlR, perl=TRUE)), length)
+  reg<-tibble(level1=urlR[grepl(gr_expr, urlR) & wd_count])
   if(is.data.frame(reg) && nrow(reg)==0){reg="None"}
   return(reg)}
 
@@ -51,7 +53,6 @@ scrapmenupage <- function(url){
     { gsub('^\\s+|\\s+$','', .) }
   return(tibble(link = link_, url = url_))
 }
-
 
 
 scrapwebpage <- function(webp){
@@ -89,6 +90,7 @@ scrapwebpage <- function(webp){
                 level2 = level2_, webscrape = webscrape_,
                 url = url_))
 }
+
 
 scrappage <- function(x, ttime, dnames, savetodir, tabextract){
 
@@ -141,21 +143,34 @@ scrappage <- function(x, ttime, dnames, savetodir, tabextract){
   }else{
     ind = suppressWarnings(which(grepl("^[[:digit:]]+$", as.numeric(t(tbls[[2]])[,2]))))
     if(length(ind)==0){ind = suppressWarnings(which(grepl("^[[:digit:]]+$", as.numeric(t(tbls[[3]])[,2]))))}
-    res <- tryCatch(c(tbls[[length(tbls)]][ind][3,]), error = function(e) e)
-    res <- res[unlist(lapply(res, function(x) grepl("\\%", x)))]
-    if(inherits(res,  "error")) return ("error")
 
-    res <- suppressWarnings(as.numeric(gsub("%", "", res)))
-    res[is.na(res)]<-"None"
-    invisible(gc())
-  }
+    res <- tryCatch(c(tbls[[length(tbls)]][ind][3,]), error = function(e) e)
+    if(!inherits(res,  "error")) {res <- res[unlist(lapply(res, function(x) grepl("\\%", x)))]}
+
+    if(inherits(res,  "error")) {res <- tryCatch(c(tbls[[tabextract]][,3]), error = function(e) e)
+                                 res <- suppressWarnings(as.numeric(gsub('\r.*','\\1',res)))}
+
+                                 res <- suppressWarnings(as.numeric(gsub("%", "", res)))
+                                 res[is.na(res)]<-"None"
+                                 invisible(gc())
+                                 }
+
 
   #working with names
   if(ttime==FALSE){
     if(dnames){
       res_names<-transliterate(tbl[,2])
+      res_names<-res_names[res_names!="Chislo golosov izbirateley, podannykh za kazhdyy spisok" & res_names!="Chislo golosov izbirateley, podannykh za"]
       res_names<-res_names[!res_names==""]
-    }else{
+
+      }else{
+
+      if(any(is.na(tbl[,1]))&"Chislo golosov izbirateley, podannykh za kazhdyy spisok"%in%transliterate(tbl[,2])){
+         w <- which(transliterate(tbl[,2])=="Chislo golosov izbirateley, podannykh za kazhdyy spisok")
+         tbl[w[1],3]<-NA
+         if(length(w)>=2) tbl<-tbl[-w[-1],]
+      }
+
       ind <- which(tbl[,2]=="")
       if(length(ind)!=0){
         namesC<-paste0("C", 1:(ind-1), sep="")
@@ -163,7 +178,7 @@ scrappage <- function(x, ttime, dnames, savetodir, tabextract){
         res_names=c(namesC, namesP)
         }
       if(length(ind)==0){
-        ind <- which(tbl[,1]==""|is.na(tbl[,1]))
+        ind <- which(tbl[,1]==""|is.na(tbl[,1]))[1]
         namesC<-paste0("C", 1:(ind-1), sep="")
         namesP<-paste0("P", 1:(length(tbl[,2])-(ind)), sep="")
         res_names=c(namesC, namesP)

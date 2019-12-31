@@ -7,17 +7,17 @@
 scrapeCandidates(x, tabextract = NULL, savetodir = "")
 }
 \arguments{
-\item{x}{url, list of urls}
+\item{x}{url, list of urls.}
 
 \item{tabextract}{select the table number to extract in order to override the table selection algorithm.}
 
-\item{savetodir}{save html downloaded data files in directory, i.e. "C:/Documents"}
+\item{savetodir}{save downloaded html files to directory, i.e. "C:/Documents".}
 }
 \value{
-Returns the list with data.frame object and retrieval date.
+Returns the list containing the data.frame object and retrieval date.
 }
 \description{
-This function extracts the candidate-related data information from the webpages.
+This function extracts the candidate-related data from the webpages.
 }
 \examples{
 library(CECscraper)

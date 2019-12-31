@@ -13,14 +13,14 @@ listURLextractor(x)
 Returns the dataframe object with urls, links.
 }
 \description{
-This function extracts the links from the dropdown menu.
+This function extracts links and urls from the lists/menus.
 }
 \examples{
 #Example
 library(CECscraper)
 
-murl<-"https://tinyurl.com/yy6roo3g"
-oiks<-listURLextractor(murl)
-rayons<-listURLextractor(listURLextractor(murl))
-uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
+murl <- "https://tinyurl.com/yy6roo3g"
+oiks <- listURLextractor(murl)
+rayons <- listURLextractor(listURLextractor(murl))
+uiks <- listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
 }

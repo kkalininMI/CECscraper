@@ -1,10 +1,10 @@
 #' @title dataBuilder function
 #' @description This function builds the data frame from the webpage or listURLextractor/rowURLextractor objects.
 #' @param x link/list/data frame with links.
-#' @param bylevel  define data subsets for an output (i.e. single-member districts).
+#' @param bylevel  define data subsets for an output (i.e. single-member districts); if bylevel=NULL the whole data set is returned.
 #' @param ttime checks if extracted data covers reported turnout over election day (TRUE) or not (FALSE).
-#' @param typedata checks whether the data extracted from "svodnya tablitsa"(pivot table) link (fast approach) or "rezultaty vyborov" link (slow approach).
-#' @param dnames assign to column name labels original labels (TRUE) or not (FALSE).
+#' @param typedata "slow" if the data is extracted from "rezultaty vyborov" link (slow approach); "fast" if the data is extracted from "svodnya tablitsa" (pivot table) (fast approach).
+#' @param dnames assign original labels to column names(TRUE).
 #' @param tabextract select the table number to extract in order to override the table selection algorithm.
 #' @param savetodir save html data files to specified directory, i.e. "C:/Documents".
 #' @export

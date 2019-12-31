@@ -1,7 +1,7 @@
 #' @title dataMerger function
 #' @description This function merges the list of data objects together.
-#' @param x the list of data objects.
-#' @param byrow   the list is merged by row or by column.  If byrow==FALSE only two objects must be put into the list.
+#' @param x list of data objects.
+#' @param byrow   list is merged by row or by column.  If byrow==FALSE only two objects are merged into a list.
 #' @export
 #' @import dplyr
 #' @return Returns the data.frame object with urls and links.

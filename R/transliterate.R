@@ -9,7 +9,8 @@
 #' transliterate("enter cyrillic text here")
 
 transliterate<-function(v){
-                           gsub("\u00B7", "",
+                     gsub("\"", "'",
+                           gsub("\u00B7|\\(|\\)", "",
                                 stri_trans_general(
-                                  stri_trans_general(v, "russian-latin/bgn"),"Latin-ASCII"))
+                                  stri_trans_general(v, "russian-latin/bgn"),"Latin-ASCII")))
                           }

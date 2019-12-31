@@ -10,13 +10,13 @@ dataBuilder(x, bylevel = NULL, ttime = FALSE, typedata = "slow",
 \arguments{
 \item{x}{link/list/data frame with links.}
 
-\item{bylevel}{define data subsets for an output (i.e. single-member districts).}
+\item{bylevel}{define data subsets for an output (i.e. single-member districts); if bylevel=NULL the whole data set is returned.}
 
 \item{ttime}{checks if extracted data covers reported turnout over election day (TRUE) or not (FALSE).}
 
-\item{typedata}{checks whether the data extracted from "svodnya tablitsa"(pivot table) link (fast approach) or "rezultaty vyborov" link (slow approach).}
+\item{typedata}{"slow" if the data is extracted from "rezultaty vyborov" link (slow approach); "fast" if the data is extracted from "svodnya tablitsa" (pivot table) (fast approach).}
 
-\item{dnames}{assign to column name labels original labels (TRUE) or not (FALSE).}
+\item{dnames}{assign original labels to column names(TRUE).}
 
 \item{tabextract}{select the table number to extract in order to override the table selection algorithm.}
 

@@ -1,4 +1,6 @@
 # CECscraper
+
+
 CECscraper is an open source tool specifically designed for webscraping the data from the website of Central Election Commission (CEC, CIK).  The package helps to implement a wide range of webscraping tasks related to different types of electoral data. The package's flexibility is stemming from its "constructor" principle: any webscraping task can be divided into a series of steps technically supported by package's functions.  Compliance with [ethical standards of webscraping](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01) is left to user's discretion.
 
 ## I Extraction of electoral data

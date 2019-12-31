@@ -1,8 +1,8 @@
 #' @title fileURLextractor function
-#' @description This function extracts the links and urls from the html page of the Central Election Commission.
+#' @description This function extracts the links and urls from an html page of the Central Election Commission.
 #' @param html_file html file object.
-#' @param tabextract  select the table number to extract in order to override the table selection algorithm.
-#' @param hashid generate md5 hash id for an election.
+#' @param tabextract  a table number to extract in order to override the table selection algorithm (by default, 1).
+#' @param hashid generate a unique md5 hash id for election (TRUE).
 #' @export
 #' @import rvest
 #' @import digest
