@@ -1,13 +1,12 @@
 # CECscraper
-CECscraper is an open source tool for web scraping the data from the website of the Central Election Commission (CEC, CIK).  The package's functions help to implement a wide range of web-scrapping tasks related to different types of electoral data. The package's webscraping flexibility is based on the "constructor" principle, according to which any webscraping task can be divided into the sequence of basic webscrapping steps realized through the package's functions.  While using this package the user is expected  to follow the
-[guidance for the ethic webscraping](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01) and fully comply with Central Election Commission's webscrapping guidelines.  
+CECscraper is an open source tool specifically designed for webscraping the data from the website of Central Election Commission (CEC, CIK).  The package helps to implement a wide range of webscraping tasks related to different types of electoral data. The package's flexibility is stemming from its "constructor" principle: any webscraping task can be divided into a series of steps technically supported by package's functions.  Compliance with [ethical standards of webscraping](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01) is left to user's discretion.
 
-## I Extracting electoral data
-The webscraping of electoral data implies that the user constructs the webscraping algorithm using package's functions as building blocs.  The scraping procedure consists of two stages. On the first stage the user creates the data frame via the set of *URL extraction functions* that contains collection of target URLs and links (attributes directly linked to URLs), as well as attributes or information inherited from higher levels of data (called "level" or "info"). On the second stage the user is able to scrape and build the dataframe containing electoral data via the Data building function. 
+## I Extraction of electoral data
+The webscraping of electoral data is performed via the algorithm that uses package's functions as building blocs.  The scraping procedure consists of two stages. On the first stage the user creates the data frame via a set of *URL extraction functions*, which contain target URLs and links (attributes directly linked to URLs), as well as attributes inherited from previous stages (called *level* or *info*). On the second stage the user builds the data frame containing electoral data via special data building function. 
 
-To give you a taste of how easy scraping would be, let's imagine that we are interested in webscraping the precinct-level data for Moscow City Council election held on September 2019.  The sequence of possible scraping steps would be as follows:
+To give you a taste of how easy scraping becomes, let's say that we are interested in webscraping the precinct-level data for Moscow City Council election held on September 2019.  Then, the sequence of scraping steps would be as follows.
 
-First, load three R packages. Find the  *root URL* using election search of [http://www.izbirkom.ru](http://www.izbirkom.ru).
+First, load three libraries into the current session. Then, open [http://www.izbirkom.ru](http://www.izbirkom.ru) in your web browser, and search for "Moscow City Council election, September 2019" to find the  *root URL*.
 
     library(CECscraper)
     library(dplyr)
@@ -15,72 +14,70 @@ First, load three R packages. Find the  *root URL* using election search of [htt
 
 Second, click on the election link and copy-paste election's URL "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null" into a variable *root_url*
     
-    root_url <- "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null".
+    root_url <- "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null"
     
-Third, by keeping in mind that the hierarchy of URLs is **general election results-> election results for OIKs/SMDs -> election results for rayons -> election results for precincts**,
-let's derive URLs for OIKs. There are different ways to do this. For instance, we can obtain a set of URLs for OIKs simply by clicking on the drop-down menu of "Нижестоящие избирательные комиссии".  Let's extract this URL data via listURLextractor() function.
+Third, consider that CEC's hierarchy of URLs is **general election results -> election results for OIKs/SMDs -> election results for rayons -> election results for precincts**. Given that we find ourselves on the **general election results** page, we can proceed by obtaining URLs for OIKs. There are different ways of doing this. For instance, we can obtain a set of URLs for OIKs simply by clicking on the drop-down menu of "Нижестоящие избирательные комиссии".  Let's extract URLs via *listURLextractor()* function.
 
     oiks_urls <- listURLextractor(root_url)
     
     oiks_urls[1,]
 
-Notice that in our data the *link* variable directly refers to URLs. Check if we've collected the right set of URLs by copy-pasting one of the scraped URLs into the web browser.  Then, in the browser by clicking on the drop-down menu of "Нижестоящие избирательные комиссии" for OIKs, we can find URLs for rayons (i.e. rayons are nested within OIKs).  Let's scrape the URLs for rayons by using listURLextractor() once again.
+Notice that in our data the *link* variable directly refers to scraped URLs. Check if we've collected the right set of URLs by copy-pasting one of the scraped URLs into your web browser.  By selecting items in a drop-down menu of "Нижестоящие избирательные комиссии", we access URLs for rayons (i.e. rayons are nested within OIKs).  Let's scrape the URLs for rayons by using *listURLextractor()*.
 
     rayons_urls <- listURLextractor(oiks_urls)
     
     rayons_urls[1,]
     
-Check if we've collected the right set of URLs by copy-pasting one of the scraped URLs into the web browser.  By the way, notice that the function "memorizes" OIKs by pushing them in the *level* variable, and each time adds new *link* variable directly linked to current scraping level, i.e. rayons.  This is an important "cumulative" feature of *URL extraction functions*  enabling us to store information from previous levels. 
+Now check if the right set of URLs was collected by copy-pasting one of the scraped URLs into your web browser.  Here notice that while the function "memorizes" OIKs and other auxiliary information by pushing data into the *level* variables, the newly added *link* variable is directly tied to URLs for rayons.  This cumulative feature of *URL extraction functions* enables us to store and use information from the previous extraction steps. 
 
-By the way, since we are dealing with nested URLs, we can simplify our previous tasks by resorting to nested functions:
+Notice that since we are dealing with nested URLs, we can simplify our previous code by resorting to nested functions:
 
-    rayons_urls <- listURLextractor(
-                        listURLextractor(root_url)
+    rayons_urls <- listURLextractor(  #extract rayons
+                        listURLextractor(root_url)  #extract OIKs
                             )
 
 
-Again, to check if we've collected correct set of URLs simply copy-paste one of the scraped URLs into the web browser. Now it appears that we can't access the precinct-level data without clicking on
+Again, to check if we've collected the right set of URLs simply copy-paste one of the scraped URLs into a web browser. Now it appears that we can't access the precinct-level data without clicking on the link
 "сайт избирательной комиссии субъекта Российской Федерации".
 
-Fourth, let's scrape the URLs linked to the "сайт избирательной комиссии субъекта Российской Федерации" link for all rayons_urls (scraping these URLs would be equivalent to actual link clicking).  
-Note that all we need is just to copy-paste the link from the website "сайт избирательной комиссии субъекта Российской Федерации", and then properly transliterate it via package's internal transliterator, tranliterate() function.
+Fourth, let's scrape URLs from links associated with "сайт избирательной комиссии субъекта Российской Федерации" for all rayons_urls (such scraping would be equivalent to actual clicking on the link).  
+Note that here all we need is just to copy-paste the link from the website "сайт избирательной комиссии субъекта Российской Федерации", and then properly transliterate it via package's internal transliterator, *tranliterate()* function.
 
     rayons_urls2 <- rowURLextractor(rayons_urls, transliterate("сайт избирательной комиссии субъекта Российской Федерации"))
     
     rayons_urls2[1,]
 
-As always, check if extracted URLs are OK by copy-pasting one of the URLs in a web browser.
+As always, check if extracted URLs are OK by copy-pasting one of the scraped URLs into a web browser.
 
-Fifth, now if we click the drop-down menu of Нижестоящие избирательные комиссии  we access the precinct-level data.  So, let's use the listURLextractor() again:
+Fifth, after choosing items from a drop-down menu of Нижестоящие избирательные комиссии, we are able to access the precinct-level data.  So, in this case let's use the *listURLextractor()* again:
 
     uiks_urls <- listURLextractor(rayons_urls2)
 
-Check if URLs for precincts are OK by copy-pasting one of the URLs to your web browser.
+Check if URLs for precincts are OK by copy-pasting one of the URLs into a web browser.
 
 Sixth, to access the precinct-level data we need to click on the link "Результаты выборов по одномандатному (многомандатному) округу".  
-In other words, we would need to use rowURLextractor() again.
+In other words, we would need to use *rowURLextractor()* again. To speed up execution of our example, let's limit our webscraping example to the first 200 observations. 
 
     uiks_urlsD <- rowURLextractor(uiks_urls[1:200, ], transliterate("Результаты выборов по одномандатному (многомандатному) округу"))
     
-Check if uiks_urlsD provide you direct access to the data by copy-pasting one of the URLs to your web browser.
+Check if uiks_urlsD provide you direct access to the precinct-level data by copy-pasting one of the URLs into your web browser.
 
-Seventh, now scrape the data using uiks_urls.  We need to keep in mind several things: 
+Seventh, now we are ready to scrape precinct-level data using *dataBuilder()* function.  We need to keep in mind several important details: 
 
-  + *bylevel* parameter defines the level of aggregation for the dataset:  since we are dealing with SMD data, the level must reflect SMD.  Open the uiks_urls and find a variable  "level1" -- this is exactly what we need.
+  + *bylevel* is defined by *level* or *info* variables, and organizes the output as a list of SMDs (if *level* wasn't set up, our algorithm would erroneously attempt to merge all SMD data together). The *uiks_urlsD* data frame contains variable *level1* that defines which SMD each of our URLs belongs to.
   
-  + *typedata="slow"*, i.e. we need to go precinct-page by precinct-page to extract precinct-level data (the faster approach would be to scrape using the "Summary table of electoral results", which contains precinct-level information per rayon, this is a so-called "fast approach".  See below) 
+  + *typedata="slow"*, whereas *slow* implies that the scraper visits one precinct page after another to extract all the relevant data, *fast* implies scraping from the "Summary table of electoral results" with precinct-level data available per rayon-page (See Tipcs for efficient webscraping).
   
-  + *dname=TRUE* since we care about the names of SMD Candidates we need to set this paramter to TRUE (sometimes the exact names of the columns are unimportant, so for computational purposes the variable names are are assigned simple codings "C1...Cn" for ballot counts and "P1...Pn" for candidates/parties).
-  
-  
-Let's scrape first 200 rows.
+  + *dname=TRUE*, since we care about the names of SMD candidates we need to set this parameter to TRUE.  Quite often column names are automatically are assigned primitive names labels: for ballot counts "C1...Cn" and for candidates/parties) "P1...Pn".
+
+Let's scrape the first 200 rows of our data.
 
     data_uiks <- dataBuilder(uiks_urlsD,  bylevel="level1", typedata = "slow", dnames = TRUE)
      
     names(data_uiks$data)
 
 
-Eighth, the data is a list of data frames defined by "level1".  To merge all the data together one needs to apply dataMerger() with parameter byrow = TRUE, i.e. the data needs to be merged by row. 
+Eighth, the data is a list of data frames defined by variable *level1*.  To merge all the data together one needs to apply *dataMerger()* with parameter *byrow = TRUE*, i.e. the data needs to be merged by row. 
 
      data_uiks_merged <- dataMerger(data_uiks, byrow = TRUE) 
 
@@ -89,8 +86,7 @@ To access the webscraped data:
      edit(data_uiks_merged$data)
 
 
-Note that this is the decription of one of the webscrapping "paths":  to address your webscraping needs you can use any path and any sequence of functions as long as they are logically consistent.  
-For instance, we could start webscrapping a bit differently:
+Note that we've just described only one webscraping path.  We might also want to set up an alternative path as long as it is logically consistent.  For instance, we could implement our webscraping task in a slightly different fashion:
 
     root_url <- "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null".
 
@@ -113,7 +109,7 @@ For instance, we could start webscrapping a bit differently:
                 dataBuilder(uiks_urls,  bylevel="level2", typedata = "slow", dnames = TRUE) %>%
                 dataMerger(byrow = TRUE) 
 
-The description of the third webscraping using "fast" method is provided in *Task 3*.
+The description of the third webscraping path using "fast" method is provided in *Task 3*.
   
     
  
@@ -124,100 +120,98 @@ The description of the third webscraping using "fast" method is provided in *Tas
 
     This function extracts election-related links and urls from an html page of the Central Election Commission.
     
-    + html_file -- html file object.
-    +	tabextract -- select the table number to extract in order to override the table selection algorithm.
-    +	hashid -- generate unique md5 hash id per election.
+    + *html_file* -- html file object.
+    +	*tabextract* -- a table number to extract in order to override the table selection algorithm.
+    +	*hashid* -- generate a unique md5 hash id for election (TRUE).
 
 2. <em>listURLextractor (x)</em> 
     
-    This function extracts election-related links from the lists or menus.
+    This function extracts links and urls from the lists or menus.
     
-    +	x -- link, list of links or data frame with links.
+    +	*x* -- link, list of links or data frame with links.
 
 3. <em>rowURLextractor (x, item, select = 1)</em>
 
-    This function extracts the links and urls from the page.
+    This function extracts the links and urls from the webpage.
     
-    +	x -- the list of urls or MenuListExtractor object.
-    +	item -- link/expression that contains the url of interest.
-    +	select -- select id of a single match among several identified by the algorithm.
+    +	*x* -- list of urls or MenuListExtractor object.
+    +	*item* -- link/expression that contains the url of interest.
+    +	*select* -- if more than one matched rows are found, define which one to work with.
+
 
 ### Data building function:
 4.  <em> dataBuilder (x, bylevel = NULL, ttime = FALSE, typedata = "slow", dnames = FALSE, tabextract = NULL, savetodir = "")</em> 
 
-    This function builds the data frame from the webpage or listURLextractor/rowURLextractor objects.
+    This function builds the data frame from URLs or listURLextractor/rowURLextractor objects.
     
-    +	x -- link/list/data frame with links.
-    +	bylevel -- define data subsets for an output
-    + ttime -- checks if extracted data covers reported turnout over election day (TRUE) or not (FALSE).
-    +	typedata -- checks whether the data extracted from "svodnya tablitsa"(pivot table) link (fast approach) or "rezultaty vyborov" link (slow approach).
-    +	dnames -- assign to column name labels original labels (TRUE) or not (FALSE).
-    +	tabextract -- select the table number to extract in order to override the table selection algorithm.
-    +	savetodir -- save html data files to specified directory, i.e. "C:/Documents".
+    +	*x* -- link/list/data frame with links.
+    +	*bylevel* -- defines data subsets for an output; by default, the whole data set will be returned.
+    + *ttime* -- checks if extracted data contains reported turnout during election day (TRUE) or not (FALSE).
+    +	*typedata* -- "slow" if the data is extracted from "rezultaty vyborov" link (slow approach); "fast" if the data is extracted from "svodnya tablitsa" (pivot table) (fast approach).
+    +	*dnames* -- assign original labels to column names(TRUE).
+    +	*tabextract* -- select the table number to extract in order to override the table selection algorithm.
+    +	*savetodir* -- save html data files to specified directory, i.e. "C:/Documents".
 
 ### Auxiliary functions:
 5.  <em> dataMerger(x, byrow = TRUE) </em> 
     
     This function merges the list of data objects together.
     
-    +	x -- the list of data objects.
-    +	byrow -- the list is merged by row or by column.  If byrow==FALSE only two objects merged into a list.
+    +	*x* -- list of data objects.
+    +	*byrow* -- list is merged by row or by column.  If byrow==FALSE only two objects are merged into a list.
 
 6.  <em> eftFormatter(x, Nvalid = "CEC", levels = TRUE) </em> 
 
     This function reformats the data for its use with Election Forensics Toolkit.
   
-    +	x -- the object from Databuilder/DataMerger function.
-    +	Nvalid -- valid votes computed using either "CEC" (using the Central Election Comission's formula); "AllVotes" (total number of votes cast for all candidates).
-    +	levels -- add information on levels (TRUE) or not (FALSE) to the output.
+    +	*x* -- the object from Databuilder/DataMerger function.
+    +	*Nvalid* -- valid votes computed using either "CEC" (Central Election Comission's formula); "AllVotes" (total number of votes cast for all candidates).
+    +	*levels* -- add information on levels (TRUE) or not (FALSE) to the output.
 
 7.  <em> transliterate(v) </em>
 
     Returns transliterated expression.
     
-    +	v -- expression
+    +	*v* -- expression in Cyrillic.
 
 
-## II Extracting data on candidates
+## II Extraction data on the candidates
 8.  <em> scrapeCandidates(x, tabextract = NULL, savetodir = "") </em> 
 
-    This function extracts the candidate-related data information from the webpages.
+    This function extracts the candidate-related data from the webpages.
     
-    +	x -- url, list of urls
-    +	tabextract -- select the table number to extract in order to override the table selection algorithm.
-    +	savetodir -- save html downloaded data files in directory, i.e. "C:/Documents".
+    +	*x* -- url, list of urls
+    +	*tabextract* -- select the table number to extract in order to override the table selection algorithm.
+    +	*savetodir* -- save downloaded html data files to directory, i.e. "C:/Documents".
 
 
 ## Tips for efficient webscraping
 
 1.	Long-Path Approach vs. Short-Path Approach
 
-    Long-Path approach assumes that the URL accumulation starts with <em>fileURLextractor()</em> function.  In other words, after the initial data search, all the search results must be saved as a single html file for later use by this function.  The short-path approach assumes that the user can feed URLs directly into the list and row extraction functions without resorting to <em>fileURLextractor()</em> function.  The latter approach, however, may prevent the user from getting certain "level" attributes like the date of election or election-specific hashids important for producing unique election identifiers.
+    Long-Path approach assumes that the URL accumulation starts with *fileURLextractor()* function.  In other words, after initial data search on the CEC website, all search results are expected to be saved into a single html file for its later use by *fileURLextractor()* function.  In contrast, the short-path approach assumes that the user can feed URLs directly into the list and row extraction functions without resorting to *fileURLextractor()* function (this cuts down on the number of required steps).  The latter approach, however, may prevent the user from getting certain *level* attributes like the date of election or election-specific hashids required for unique election identifiers.
 
-2.	Automated Webscraping vs. Prudent Webscraping
+2.	Automated Webscraping vs. Looping
 
-    With the help of <em>dataBuilder()</em> it is possible to webscrape literary hundreds of elections and collect the data across thousands of locations, but this can also drastically increase the chances of arbitrary errors in one of the elections and high probability of losing all previously scrapped data.  If the user attempts to webscrape many elections at once, a much more prudent approach would be to place <em>CECscraper</em> functions within the loop and save the data as R objects using <em>saveRDS()</em> in R. 
+    With the help of *dataBuilder()* it is possible to webscrape literary hundreds of elections and collect data across thousands of locations, but this can also drastically increase the chances of arbitrary errors in one of the elections and high probability of losing all previously scraped data.  If the user attempts to webscrape many elections at once, a more prudent approach would be to place *CECscraper* functions within the loop and save the data as R objects using *saveRDS()* in R. 
 
 3.	Slow Webscraping vs. Fast Webscraping
 
-    On the website of the Central Election Commission electoral data is provided in two different formats:  "Rezul'taty vyborov" (Electoral results)      and <em>"Svodnaya tablitsa rezul'tatov vyborov"</em> (<em>"Summary table of electoral results"</em>).  If the webscraping of the first format
-    takes relatively long time to implement (it contains deeper data structure with less data per page), the second format is much faster (it
-    contains shallower data structure with more information per page).  Both approaches "slow" or "faster" can be used interchangeably, but slow web scrapping is more error      prone.
+    On the website of the Central Election Commission electoral data is provided in two different formats:  *Rezul'taty vyborov* (Election results) and *Svodnaya tablitsa rezul'tatov vyborov* (*Summary table of election results*).  If the first format takes relatively long time to implement (it contains deeper data structure with less data per page), the second format is much faster (it contains shallower data structure with more information per page).  Both approaches "slow" or "fast" can be used interchangeably, but slow webscraping is more error prone.
 
 4.	Table Search Automation vs. Manual Selection
 
-    Both <em>dataBuilder()</em> and  <em>scrapeCandidates()</em> functions contain in-built detection algorithm designed to automatically select the table that is used for data extraction.  The webpage can consist of up to 12 different tables and subtables.  If dataBuilder() and                    scrapeCandidates() produce an error message the algorithm must have failed to detect correct table.  In case of an error, the user need to rely on trial-and-error approach of defining the table number via tabextract parameter.
+    Both *dataBuilder()* and *scrapeCandidates()* functions contain in-built detection algorithm designed to automatically select the table used for data extraction.  The webpage can be made of a dozen of tables and subtables.  If *dataBuilder()* and  *scrapeCandidates()* result in an error message, this might be due to algorithm's failure in finding correct table.  In case of an error, the user is advised to apply trial-and-error approach in setting tabextract to an appropriate table parameter.
                                      
 5.	Transliteration
 
-    All Cyrillic characters are transliterated.  In order to use rowURLextractor() efficiently, the user needs transliterate Cyrillic text via the  transliterate() function.
+    All Cyrillic characters are internally transliterated.  In order to use *rowURLextractor()* efficiently, the user needs to transliterate Cyrillic text via the  *transliterate()* function.
 
 # Examples
 
-### *Task 1: Webscrape the region-level electoral data for presidential election 2018 using the slow webscrapping approach.*
+### *Task 1: Webscrape the region-level electoral data for presidential election 2018 using the slow webscraping approach.*
 
-Let’s use a short-path approach by feeding the root url into the set of URL extractor functions: 
-The sequence of steps is as follows:
+Let’s use the short-path approach by feeding root URL into a set of URL extractor functions.  A possible sequence of steps would be follows:
 
 
 ![Picture 1](Inst/Task1p1.png)
@@ -238,10 +232,8 @@ The sequence of steps is as follows:
     res2 <- listURLextractor(res1)  #See Picture 3
     res3 <- dataBuilder(res2, ttime = FALSE, typedata = "slow", dnames = TRUE)
     View(res3$data)
-  
-  \ 
-  \ 
-  \ 
+    
+    
   
     #Full code
 
@@ -253,9 +245,6 @@ The sequence of steps is as follows:
     res3 <- dataBuilder(res2, ttime = FALSE, typedata = "slow", dnames = TRUE)
     View(res3$data)
 
-  \ 
-  \ 
-  \ 
 
 ### *Task 2: Webscrape the region-level data for all gubernatorial elections that occured on September 8, 2019 using slow approach.* 
 Since we need to download many elections it is more convenient to use the long-path approach.
@@ -287,9 +276,6 @@ Picture 6
     res4 <- dataMerger(res3, byrow = TRUE) 
     View(res4$data)
   
-  \ 
-  \ 
-  \ 
 
     #Full code
     
@@ -305,7 +291,7 @@ Picture 6
     View(res4$data)
 
 
-### *Task 3: Webscrape the precinct-level data for Moscow election on September 2019 using fast approach. 
+### *Task 3: Webscrape precinct-level data (time and electoral data) as well as the data on candidates for Moscow City Duma election held on September 2019 using fast approach. 
 
 Picture 7
 ![Picture 7](Inst/Task3p1.png)
@@ -345,9 +331,7 @@ Picture 12
     res5 <- dataBuilder(res4, typedata = "fast", dnames = TRUE, bylevel="level3") #See Picture 12
 
   
-  \ 
-  \ 
-  \ 
+
 
     #Full code
 
@@ -404,7 +388,7 @@ Picture 12
     resc <- scrapeCandidates(urlc)
 
 
-### *Task 4: Webscrape all available country-level data for federal elections (both presidential and parliamentary). 
+### *Task 4: Webscrape country-level data for all federal elections (both presidential and parliamentary elections). 
     
     library(CECscraper)
     library(dplyr)
@@ -423,7 +407,7 @@ Picture 12
     names(res3$data)
 
 
-### *Task 5: Webscrape the SMD electoral data for 2016 State Duma elections, webscrape  candidate's party ID, and then format the data in the CLEA's format (*[CLEA website](http://www.electiondataarchive.org/data-and-documentation.php)).  
+### *Task 5: Webscrape the SMD electoral data for 2016 State Duma elections, webscrape  candidate's party ID, and then reformat the data using CLEA's formatting guidelines ([CLEA website](http://www.electiondataarchive.org/data-and-documentation.php)).  
 
     #Full code
 
