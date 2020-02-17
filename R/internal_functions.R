@@ -66,11 +66,31 @@ scrapwebpage <- function(webp){
     { gsub('^\\s+|\\s+$','', .) }%>%
     transliterate()
 
-  level2_ <- webp %>%
-    rvest::html_nodes("b") %>%
-    rvest::html_text()%>%
+
+
+  regNA<-webp %>% html_nodes("td>:not(#a)")%>% html_attr('href')
+
+
+  regA_ <- webp %>%
+     rvest::html_nodes("b") %>%
+     rvest::html_text()%>%
     { gsub('^\\s+|\\s+$','', .) }%>%
-    transliterate()
+     transliterate()
+
+  #level2_ <- webp %>%
+  #  rvest::html_nodes("b") %>%
+  #  rvest::html_text()%>%
+  #  { gsub('^\\s+|\\s+$','', .) }%>%
+  #  transliterate()
+
+  if(length(url_)!=length(regA_)){
+    level2_ <- rep(regA_, c(diff(which(is.na(regNA)))-1,
+                 length(regNA)-which(is.na(regNA))[length(which(is.na(regNA)))]))
+
+  }else{
+    level2_ <- regA_
+  }
+
 
   datebool <- grepl("^[[:digit:]]+", date_)
   datesV <- date_[datebool]
