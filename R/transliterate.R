@@ -2,6 +2,7 @@
 #' @description This function transliterates expression from Cyrillic to Latin.
 #' @export
 #' @param v expression
+#' @import stringi
 #' @return Returns transliterated expression.
 #' @examples
 #' library(CECscraper)

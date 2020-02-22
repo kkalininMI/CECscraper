@@ -32,22 +32,37 @@ rowURLextractor<-function(x, item, select = 1){
 
   if (is.character(x) & length(x)>1){
     list.links<-lapply(1:length(x), function(iter) {
-      k<-data.frame(scrapregion(x[iter]), scrapmenupage(x[iter]))%>%filter(!is.na(url))
-      cat("scraping page N", iter, "\n")
-      return(k)})
-    list.links.sel<-lapply(list.links, function(x) x[grepl(item,  transliterate(x$link)),][select,])
-    links <- do.call(rbind,list.links.sel)
+                k<-tryCatch(data.frame(scrapregion(x[iter]), scrapmenupage(x[iter]))%>%filter(!is.na(url)), error = function(e) e)
+                cat("scraping page N", iter, "\n")
+                if(inherits(k,  "error")) {warning("Row URL non-scrapable or missing from the webpage"); k=c(NA,NA,NA)}
+                return(k)})
+
+    list.links.sel<-lapply(list.links, function(x){
+                k<-tryCatch(x[grepl(item,  transliterate(x$link)),][select,], error = function(e) e)
+                if(inherits(k,  "error")) {warning("Row URL non-scrapable or missing from the webpage"); k=c(NA,NA,NA)}
+                return(k)})
+    #if(inherits(list.links.sel,  "error")) {warning("Row URL non-scrapable or missing from the webpage")}
+    links <- data.frame(do.call(rbind,list.links.sel)); colnames(links)<-c("level1","link", "url")
     links$link<-transliterate(links$link)
     nlink=as.data.frame(links, stringsAsFactors = FALSE)
     row.names(nlink) <- NULL
   }
 
   if (is.data.frame(x)){
+
+    #x <- x[!is.na(x$url),]
+
     list.links<-lapply(1:dim(x)[1], function(iter) {
-      k<-as.data.frame(scrapmenupage(x$url[iter]))%>%filter(!is.na(url))
-      cat("scraping page N", iter, "\n")
-      return(k)})
-    list.links.sel<-lapply(list.links, function(x) x[grepl(item,  transliterate(x$link)),][select,])
+              k <- tryCatch(as.data.frame(scrapmenupage(x$url[iter]))%>%filter(!is.na(url)), error = function(e) e)
+              if(inherits(k,  "error")) {warning("Row URL non-scrapable or missing from the webpage"); k=c(NA,NA)}
+              cat("scraping page N", iter, "\n")
+              return(k)})
+
+    list.links.sel<-lapply(list.links, function(x){
+              k <- tryCatch(x[grepl(item,  transliterate(x$link)),][select,], error = function(e) e)
+              if(inherits(k,  "error")) {warning("Row URL non-scrapable or missing from the webpage"); k=c(NA,NA)}
+              return(k)})
+
     links <- do.call(rbind,list.links.sel)
 
     if(dim(links)[1]==0){
