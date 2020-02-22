@@ -45,6 +45,6 @@ fileURLextractor <- function(html_file, tabextract = NULL, hashid = FALSE){
     result <- result %>% mutate(level3 = vdigest(unique_id))
   }
 
-  result <- result[ , order(names(result))]
+  result <- data.frame(result[ , order(names(result))])
 
   return(result)}
