@@ -34,7 +34,15 @@ fileURLextractor <- function(html_file, tabextract = NULL, hashid = FALSE){
 
   if(hashid){
     vdigest <- Vectorize(digest)
-    result <- result %>% mutate(level3 = vdigest(paste(result$level1, result$level2, sep="_")))
+
+    unique_id<-paste(result$level1, result$level2, result$link, sep="_")
+    if(any(duplicated(unique_id))){
+       which_dup_id <- unique_id[unique_id%in%unique_id[duplicated(unique_id)]]
+       new_dup_id <- paste(which_dup_id, 1:length(which_dup_id), sep="_")
+       unique_id[unique_id%in%unique_id[duplicated(unique_id)]] <- new_dup_id
+    }
+
+    result <- result %>% mutate(level3 = vdigest(unique_id))
   }
 
   result <- result[ , order(names(result))]
