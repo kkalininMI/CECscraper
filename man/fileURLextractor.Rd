@@ -4,7 +4,8 @@
 \alias{fileURLextractor}
 \title{fileURLextractor function}
 \usage{
-fileURLextractor(html_file, tabextract = NULL, hashid = FALSE)
+fileURLextractor(html_file, tabextract = NULL, hashid = FALSE,
+  messages = TRUE)
 }
 \arguments{
 \item{html_file}{html file object.}
@@ -12,6 +13,8 @@ fileURLextractor(html_file, tabextract = NULL, hashid = FALSE)
 \item{tabextract}{a table number to extract in order to override the table selection algorithm (by default, 1).}
 
 \item{hashid}{generate a unique md5 hash id for election (TRUE).}
+
+\item{messages}{display progress messages (TRUE).}
 }
 \value{
 Returns the data.frame object containing levels, links and urls of elections.
@@ -27,8 +30,7 @@ webpage <- read_html(system.file("elections_primorye.html", package="CECscraper"
 
 wterrit <- webpage \%>\% fileURLextractor(hashid = TRUE)
 wterrit$webscrape[1] <- FALSE
-res_territ <- wterrit \%>\% rowURLextractor("Rezul'taty vyborov") \%>\%
+res_territ <- wterrit \%>\% rowURLextractor("Rezul`taty vyborov") \%>\%
 listURLextractor() \%>\%
 dataBuilder(ttime = FALSE, typedata = "slow", bylevel = "level3")
-
 }

@@ -13,7 +13,7 @@
 #' uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
 #'
 #' uiks_turnout<-rowURLextractor(uiks, "Dannyye ob otkrytii pomeshcheniy dlya golosovaniya")
-#' uiks_voting<-rowURLextractor(uiks, "Rezul'taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
+#' uiks_voting<-rowURLextractor(uiks, "Rezul`taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
 #'
 #' uiks_turnout_data<-dataBuilder(uiks_turnout, bylevel="level1", ttime=TRUE)
 #' uiks_voting_data<-dataBuilder(uiks_voting, bylevel="level1", ttime=FALSE)
@@ -22,9 +22,9 @@
 #' #Example 2
 #' # library(dplyr)
 #' # murl="https://tinyurl.com/y369jngp"
-#' #fast_downloadT<-rowURLextractor(murl, "Predvaritel'nyye svedeniya ob uchastii izbirateley")%>%
+#' #fast_downloadT<-rowURLextractor(murl, "Predvaritel`nyye svedeniya ob uchastii izbirateley")%>%
 #' #                 listURLextractor()%>%listURLextractor()%>%sample_n(100, replace = FALSE)%>%
-#' #                 rowURLextractor("sayt izbiratel'noy komissii sub\"yekta Rossiyskoy Federatsii")%>%
+#' #                 rowURLextractor("sayt izbiratel`noy komissii sub`yekta Rossiyskoy Federatsii")%>%
 #' #                 dataBuilder(typedata="fast", bylevel="level2", ttime=TRUE)%>%dataMerger()
 
 

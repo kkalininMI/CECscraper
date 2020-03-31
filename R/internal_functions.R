@@ -377,3 +377,134 @@ contentextractor<-function(x, uplevel, ttime, typedata, dnames, savetodir, tabex
 
   return.content[selcols] = apply(return.content[selcols], 2, function(x) suppressWarnings(as.numeric(as.character(x))))
   return(return.content)}
+
+
+
+pipefinder<-function(base.url, blocks, search.term, hits, extracturls, breakloop, messages,...){
+  msg1 <- grepl("(?<=\\(\\))$", blocks, perl=TRUE) & !grepl("messages\\s*=\\s*[FALSETRUE]", blocks, perl=TRUE)
+  msg2 <- grepl("\\(.+\\)",  blocks, perl=TRUE) & !grepl("messages\\s*=\\s*[FALSETRUE]", blocks, perl=TRUE)
+
+  if (isFALSE(messages) & any(msg1)){
+    blocks[msg1] <- gsub("\\)", "messages=FALSE)", blocks[msg1])
+  }
+
+  if (isFALSE(messages) & any(msg2)){
+    blocks[msg2] <- gsub("\\)", ", messages=FALSE)", blocks[msg2])
+  }
+
+
+  if(is.null(search.term)){
+    search.term<-"UIK|uik|uchastok"
+  }
+
+
+  whilefunction<-function(...){
+
+    new_blocks <- NULL
+    desired_pipe <- NULL
+    pipe.formula <- NULL
+    extracted.urls <- NULL
+    result <- NULL
+    ls_res <- list()
+    breakcounter <- 0
+    hit <- 0
+
+    while(is.null(pipe.formula)){
+
+      if(breakcounter>=breakloop){
+        pipe.formula <- "unidentified";
+        print("Reached maximum number of iterations. Optimal pipeline search failed :(...");
+        break}
+
+      breakcounter <- breakcounter+1
+
+      if(length(ls_res)>0){
+
+        testuik <- unlist(
+          lapply(1:length(ls_res),
+                 function(x){
+                   if (!is.null(dim(ls_res[[x]]))){any(apply(ls_res[[x]], 2, function(y) {
+                     grepl(search.term, y)}))}else{FALSE}
+                 }))
+
+        #testuik2<-unlist(lapply(names(ls_res),
+        #                        function(x) (length(unique(unlist(strsplit(x, "%>%"))))-1)==length(blocks)))
+
+
+        if(any(testuik)){
+
+          ls_resC <- names(ls_res)[testuik][1]
+          desired_pipe<-gsub("\\[1,\\]","", ls_resC)
+
+          hit=hit+1
+
+          if(hit>=hits){cat("Found desirable pipeline:", pipe.formula<-desired_pipe, "\n"); break}
+        }
+
+        selectuik<-unlist(lapply(1:length(ls_res),
+                                 function(x){
+                                   if (!is.null(dim(ls_res[[x]]))){TRUE}else{FALSE}}))
+        if(all(selectuik==FALSE)) {pipe.formula<-"unidentified";
+        print("Optimal pipeline search failed :(...");
+        break}
+
+        old_blocks <- names(ls_res)[selectuik]
+        old_blocks_data <- ls_res[selectuik]
+        expand_blocks <- data.frame(expand.grid(old_blocks, blocks, stringsAsFactors = FALSE))
+        test_expand_blocks <- apply(expand_blocks, 1,
+                                    function(x) if(!grepl("listURLextractor\\(.*\\)",
+                                                          x[2]) & grepl(x[2],x[1], fixed=TRUE)){TRUE}else{FALSE})
+
+        expand_blocks <- expand_blocks[!test_expand_blocks,]
+
+        new_blocks <- data.frame(expand_blocks,
+                                 apply(expand_blocks,1,
+                                       function(x){paste(x, collapse ="%>%")}), stringsAsFactors = FALSE)
+
+      }else{
+
+        old_blocks_data <- NULL
+        expand_blocks <- expand.grid("base.url", blocks, stringsAsFactors = FALSE)
+        new_blocks <- data.frame(expand_blocks,
+                                 apply(expand_blocks,1,
+                                       function(x){paste(x, collapse ="%>%")}), stringsAsFactors = FALSE)
+      }
+
+      ls_res<-list()
+      for(block in 1:dim(new_blocks)[1]){
+
+        if(!is.null(old_blocks_data)){
+          try_url <- tryCatch(old_blocks_data[[which(names(old_blocks_data)%in%new_blocks$Var1[block])]]$url[1], error = function(e) e)
+          co.exp <- paste("try_url", new_blocks$Var2[block], sep="%>%")
+          ev.exp <- tryCatch(eval(parse(text=co.exp)), error = function(e) e)
+
+        }else{
+
+          co.exp <- as.character(new_blocks[block,3])
+          ev.exp <- tryCatch(eval(parse(text=co.exp)), error = function(e) e)
+        }
+
+        ls_res[[new_blocks[block,3]]] <- ev.exp
+      }
+    }
+    return(pipe.formula)}
+
+  extracted.urls <- NULL
+
+  while(hits>0){
+    pipe.formulaCompute <- whilefunction(base.url, hits)
+    if(pipe.formulaCompute!="unidentified") break
+    hits <- hits - 1
+    print("Decreasing <hit> by 1")
+  }
+
+  if(!is.null(pipe.formulaCompute) & extracturls==TRUE){
+    print("Extracting all urls...")
+    extracted.urls <- eval(parse(text=pipe.formulaCompute))
+  }
+
+  result <- list(pipe.formula=pipe.formulaCompute, extracted.res=extracted.urls,  retreivaldate=Sys.time())
+
+  on.exit(closeAllConnections())
+  invisible(gc())
+  return(result)}

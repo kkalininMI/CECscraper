@@ -4,10 +4,12 @@
 \alias{listURLextractor}
 \title{listURLextractor function}
 \usage{
-listURLextractor(x)
+listURLextractor(x, messages = TRUE)
 }
 \arguments{
 \item{x}{link, list of links or data frame with links}
+
+\item{messages}{display progress messages (TRUE).}
 }
 \value{
 Returns the dataframe object with urls, links.

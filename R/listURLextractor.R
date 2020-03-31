@@ -1,6 +1,7 @@
 #' @title listURLextractor function
 #' @description This function extracts links and urls from the lists/menus.
 #' @param x link, list of links or data frame with links
+#' @param messages display progress messages (TRUE).
 #' @export
 #' @import dplyr
 #' @return Returns the dataframe object with urls, links.
@@ -14,11 +15,10 @@
 #' uiks <- listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
 
 
+listURLextractor<-function(x, messages = TRUE){
 
-
-listURLextractor<-function(x){
-
-  cat("\n\nStarting listURLextractor()...\n\n")
+  if(isTRUE(messages)){
+    cat("\n\nStarting listURLextractor()...\n\n")}
 
   if("webscrape" %in% colnames(x)) {x <- x[x$webscrape,]}
 
@@ -41,7 +41,11 @@ listURLextractor<-function(x){
   if (is.character(x) & length(x)>1){
     list.links<-lapply(1:length(x), function(iter) {level1<-scrapregion(x[iter])
     k<-data.frame(level1, as.data.frame(scrapmenu(x[iter])))%>%filter(!is.na(url))
+
+    if(isTRUE(messages)){
     cat("scraping page N", iter, "\n")
+    }
+
     return(k)})
     links <- do.call(rbind,list.links)
     links$link<-transliterate(links$link)

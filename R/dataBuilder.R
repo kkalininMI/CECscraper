@@ -7,6 +7,7 @@
 #' @param dnames assign original labels to column names(TRUE).
 #' @param tabextract select the table number to extract in order to override the table selection algorithm.
 #' @param savetodir save html data files to specified directory, i.e. "C:/Documents".
+#' @param messages display progress messages (TRUE).
 #' @export
 #' @import dplyr
 #' @return The list containing the following parameters:
@@ -25,7 +26,7 @@
 #' uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
 #'
 #' uiks_turnout<-rowURLextractor(uiks, "Dannyye ob otkrytii pomeshcheniy dlya golosovaniya")
-#' uiks_voting<-rowURLextractor(uiks, "Rezul'taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
+#' uiks_voting<-rowURLextractor(uiks, "Rezul`taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
 #'
 #' uiks_turnout_data<-dataBuilder(uiks_turnout, bylevel="level1", ttime=TRUE)
 #' uiks_voting_data<-dataBuilder(uiks_voting, bylevel="level1", ttime=FALSE)
@@ -39,26 +40,57 @@
 #' #                 rowURLextractor("sayt izbiratel'noy komissii sub\"yekta Rossiyskoy Federatsii")%>%
 #' #                 dataBuilder(typedata="fast", bylevel="level2", ttime=TRUE)%>%dataMerger()
 
-dataBuilder<-function(x, bylevel=NULL, ttime=FALSE,  typedata="slow", dnames=FALSE, tabextract=NULL, savetodir=""){
+dataBuilder<-function(x, bylevel=NULL, ttime=FALSE,  typedata="slow", dnames=FALSE, tabextract=NULL, savetodir="", messages=TRUE){
 
-  cat("\n\nStarting dataBuilder()...\n\n")
+  mdat <- NULL
+
+  if(isTRUE(messages)){
+    cat("\n\nStarting dataBuilder()...\n\n")
+    }
 
   if("download" %in% colnames(x)) {x <- x[x$download,]}
 
   assign("filecounter", 1 , envir = .GlobalEnv)
   storage<-list()
 
-  if(!is.null(bylevel)){
-    assign("splvar", x[names(x)%in%bylevel])
-    mdat <- split(x, splvar);
+  if(!is.null(bylevel)|is.list(x)){
 
-    for (iterN in names(mdat)){
-      storage[[iterN]]<-contentextractor(mdat[[iterN]], uplevel=iterN, ttime, typedata, dnames, savetodir, tabextract)
+    if(!is.null(bylevel)){
+      assign("splvar", x[names(x)%in%bylevel])
+      mdat <- split(x, splvar);}
+
+    if(!is.data.frame(x) & is.null(mdat)){
+      if("elections"%in%names(x) & dim(x$pipe.table)[1]>1 & all(x$elections$extracted.res!="No data could be extracted")){
+        mdat <- lapply(x$elections, function(xx) xx$extracted.res)
+          if (is.null(dim(mdat)))  mdat <- x$elections$extracted.res
+
+          }else if(is.null(mdat)){
+          mdat <- x$elections$extracted.res
+    }
     }
 
-  }else{
-    mdat=x
-    storage<-contentextractor(mdat, uplevel="Full dataset", ttime, typedata, dnames, savetodir, tabextract)
-  }
-  result=list(data=storage, ttime=ttime, dnames=dnames, bylevel=bylevel, retreivaldate=Sys.time())
+    if(!is.data.frame(mdat)){
+
+      for (iterN in names(mdat)){
+        if(mdat[[iterN]]!="No data could be extracted"){
+          storage[[iterN]] <- contentextractor(mdat[[iterN]], uplevel=iterN, ttime, typedata, dnames, savetodir, tabextract)
+        }else{
+          storage[[iterN]] <- "No data could be extracted"
+          }}
+
+      }else{
+        if(mdat!="No data could be extracted"){
+          storage <- contentextractor(mdat, uplevel="Full dataset", ttime, typedata, dnames, savetodir, tabextract)
+          }else{
+          storage <- "No data could be extracted"
+        }
+      }
+    }else{
+      mdat=x
+      storage<-contentextractor(mdat, uplevel="Full dataset", ttime, typedata, dnames, savetodir, tabextract)
+    }
+
+  if("pipe.table"%in%names(x)){pipe.table <- x$pipe.table}else{pipe.table <-NULL}
+  result=list(data=storage, ttime=ttime, dnames=dnames, bylevel=bylevel, retreivaldate=Sys.time(), pipe.table=x$pipe.table)
+
   return(result)}

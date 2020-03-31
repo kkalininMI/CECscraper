@@ -5,7 +5,8 @@
 \title{dataBuilder function}
 \usage{
 dataBuilder(x, bylevel = NULL, ttime = FALSE, typedata = "slow",
-  dnames = FALSE, tabextract = NULL, savetodir = "")
+  dnames = FALSE, tabextract = NULL, savetodir = "",
+  messages = TRUE)
 }
 \arguments{
 \item{x}{link/list/data frame with links.}
@@ -21,6 +22,8 @@ dataBuilder(x, bylevel = NULL, ttime = FALSE, typedata = "slow",
 \item{tabextract}{select the table number to extract in order to override the table selection algorithm.}
 
 \item{savetodir}{save html data files to specified directory, i.e. "C:/Documents".}
+
+\item{messages}{display progress messages (TRUE).}
 }
 \value{
 The list containing the following parameters:
@@ -43,7 +46,7 @@ murl<-"https://tinyurl.com/yy6roo3g"
 uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
 
 uiks_turnout<-rowURLextractor(uiks, "Dannyye ob otkrytii pomeshcheniy dlya golosovaniya")
-uiks_voting<-rowURLextractor(uiks, "Rezul'taty vyborov|vyborov po odnomandatnomu \\\\(mnogomandatnomu\\\\) okrugu")
+uiks_voting<-rowURLextractor(uiks, "Rezul`taty vyborov|vyborov po odnomandatnomu \\\\(mnogomandatnomu\\\\) okrugu")
 
 uiks_turnout_data<-dataBuilder(uiks_turnout, bylevel="level1", ttime=TRUE)
 uiks_voting_data<-dataBuilder(uiks_voting, bylevel="level1", ttime=FALSE)

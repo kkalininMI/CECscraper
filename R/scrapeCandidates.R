@@ -3,6 +3,7 @@
 #' @param x url, list of urls.
 #' @param tabextract select the table number to extract in order to override the table selection algorithm.
 #' @param savetodir save downloaded html files to directory, i.e. "C:/Documents".
+#' @param messages display progress messages (TRUE).
 #' @export
 #' @import dplyr
 #' @return Returns the list containing the data.frame object and retrieval date.
@@ -12,11 +13,10 @@
 #' url.moscow.candidates="https://tinyurl.com/yyhtfnwg"
 #' moscow.candidates<-scrapeCandidates(url.moscow.candidates)
 
+scrapeCandidates <- function(x, tabextract = NULL, savetodir = "", messages = TRUE){
 
-
-scrapeCandidates <- function(x, tabextract=NULL, savetodir=""){
-
-  cat("\n\nStarting scrapeCandidates()...\n\n")
+  if(isTRUE(messages)){
+    cat("\n\nStarting scrapeCandidates()...\n\n")}
 
   assign("filecounter", 1 , envir = .GlobalEnv)
 
@@ -91,12 +91,21 @@ scrapeCandidates <- function(x, tabextract=NULL, savetodir=""){
     }
     return(tab_result)}
 
+  if(is.list(x) & "elections"%in%names(x)){
+    x_names <- apply(x$pipe.table[colnames(x$pipe.table)[grepl("level|link", colnames(x$pipe.table))]], 1, function(x) paste(x,  collapse=", "))
+
+    x <- unlist(lapply(1:length(x$elections$extracted.res), function(o){
+      x$elections$extracted.res[[o]]$url}))
+  }
+
   if (is.character(x) & length(x)==1){
-    tab_result<-scrapcand(x)
+     tab_result<-scrapcand(x)
   }
 
   if (is.character(x) & length(x)>1){
-    tab_result<-lapply(1:length(x), function(iter) {scrapcand(x[iter])})
+    tab_result<-lapply(1:length(x), function(iter){
+      scrapcand(x[iter])})
+    names(tab_result) <- x_names
   }
 
   return_result <- list(data=tab_result, retreivaldate=Sys.time())

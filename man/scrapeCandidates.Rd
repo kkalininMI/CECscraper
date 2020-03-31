@@ -4,7 +4,8 @@
 \alias{scrapeCandidates}
 \title{scrapeCandidates function}
 \usage{
-scrapeCandidates(x, tabextract = NULL, savetodir = "")
+scrapeCandidates(x, tabextract = NULL, savetodir = "",
+  messages = TRUE)
 }
 \arguments{
 \item{x}{url, list of urls.}
@@ -12,6 +13,8 @@ scrapeCandidates(x, tabextract = NULL, savetodir = "")
 \item{tabextract}{select the table number to extract in order to override the table selection algorithm.}
 
 \item{savetodir}{save downloaded html files to directory, i.e. "C:/Documents".}
+
+\item{messages}{display progress messages (TRUE).}
 }
 \value{
 Returns the list containing the data.frame object and retrieval date.

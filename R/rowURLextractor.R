@@ -3,6 +3,7 @@
 #' @param x list of urls or MenuListExtractor object.
 #' @param item  link/expression that contains the url of interest.
 #' @param select if more than one matched rows are found, define which one to work with.
+#' @param messages display progress messages (TRUE).
 #' @export
 #' @import dplyr
 #' @return Returns the data.frame object containing levels, links and urls.
@@ -16,11 +17,14 @@
 #' uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
 #'
 #' uiks_turnout<-rowURLextractor(uiks, "Dannyye ob otkrytii pomeshcheniy dlya golosovaniya")
-#' uiks_voting<-rowURLextractor(uiks, "Rezul'taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
+#' uiks_voting<-rowURLextractor(uiks, "Rezul`taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
 
-rowURLextractor<-function(x, item, select = 1){
+rowURLextractor<-function(x, item, select = 1, messages = TRUE){
 
-  cat("\n\nStarting rowURLextractor()...\n\n")
+  if(isTRUE(messages)){
+    cat("\n\nStarting rowURLextractor()...\n\n")
+  }
+
 
   if("webscrape" %in% colnames(x)) {x <- x[x$webscrape,]}
 
@@ -81,6 +85,7 @@ rowURLextractor<-function(x, item, select = 1){
   }
 
   nlink <- nlink[, order(names(nlink))]
+  nlink[]<-lapply(nlink, as.character)
 
   on.exit(closeAllConnections())
   invisible(gc())

@@ -3,6 +3,7 @@
 #' @param html_file html file object.
 #' @param tabextract  a table number to extract in order to override the table selection algorithm (by default, 1).
 #' @param hashid generate a unique md5 hash id for election (TRUE).
+#' @param messages display progress messages (TRUE).
 #' @export
 #' @import rvest
 #' @import digest
@@ -15,14 +16,15 @@
 #'
 #' wterrit <- webpage %>% fileURLextractor(hashid = TRUE)
 #' wterrit$webscrape[1] <- FALSE
-#' res_territ <- wterrit %>% rowURLextractor("Rezul'taty vyborov") %>%
+#' res_territ <- wterrit %>% rowURLextractor("Rezul`taty vyborov") %>%
 #' listURLextractor() %>%
 #' dataBuilder(ttime = FALSE, typedata = "slow", bylevel = "level3")
-#'
 
-fileURLextractor <- function(html_file, tabextract = NULL, hashid = FALSE){
+fileURLextractor <- function(html_file, tabextract = NULL, hashid = FALSE, messages = TRUE){
 
-  cat("\n\nStarting fileURLextractor()...\n\n");
+  if(isTRUE(messages)){
+    cat("\n\nStarting fileURLextractor()...\n\n");
+    }
 
   tbln <- webpage %>% html_nodes(xpath="//table")
 

@@ -4,7 +4,7 @@
 \alias{rowURLextractor}
 \title{rowURLextractor function}
 \usage{
-rowURLextractor(x, item, select = 1)
+rowURLextractor(x, item, select = 1, messages = TRUE)
 }
 \arguments{
 \item{x}{list of urls or MenuListExtractor object.}
@@ -12,6 +12,8 @@ rowURLextractor(x, item, select = 1)
 \item{item}{link/expression that contains the url of interest.}
 
 \item{select}{if more than one matched rows are found, define which one to work with.}
+
+\item{messages}{display progress messages (TRUE).}
 }
 \value{
 Returns the data.frame object containing levels, links and urls.
@@ -29,5 +31,5 @@ rayons<-listURLextractor(listURLextractor(murl))
 uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
 
 uiks_turnout<-rowURLextractor(uiks, "Dannyye ob otkrytii pomeshcheniy dlya golosovaniya")
-uiks_voting<-rowURLextractor(uiks, "Rezul'taty vyborov|vyborov po odnomandatnomu \\\\(mnogomandatnomu\\\\) okrugu")
+uiks_voting<-rowURLextractor(uiks, "Rezul`taty vyborov|vyborov po odnomandatnomu \\\\(mnogomandatnomu\\\\) okrugu")
 }
