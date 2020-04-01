@@ -152,15 +152,36 @@ The description of the third webscraping path using *fast* method is provided in
     +	*tabextract* -- select the table number to extract in order to override the table selection algorithm.
     +	*savetodir* -- save html data files to a specified directory, i.e. "C:/Documents".
 
+### Pipe building/extraction functions:
+5.  <em> autoPipeSearch (x, ttime, blocks, search.term, hits, extracturls, breakloop, messages) </em>
+  
+    This function automatically constructs the data extraction pipe for a given election.
+  
+    + *x* -- url, list of urls.
+    + *ttime* -- checks if data covers reported turnout over election day (TRUE) or not (FALSE).  ttime is valid when blocks=NULL
+    + *blocks* -- vector of blocks to be used to construct a pipe. blocks override ttime parameters. By default, c("listURLextractor()", "rowURLextractor('sayt izbiratel`noy komissii sub`yekta')", "rowURLextractor('Itogi golosovaniya|Rezul`taty vyborov')").
+    + *search.term* once a stop term is detected, the algorithm stops building the pipe (by default, search.term="UIK|uik|uchastok"").
+    + *hits* number of times the stop word is "hit" by the algorithm. Each time the stop word is "hit", extra block is added to the pipe (by default, hits=2).
+    + *extracturls* urls are extracted using the pipe or the list of pipes (by default, extracturls=FALSE).
+    + *breakloop* maximum number of iterations for optimal path search (by default, breakloop=100).
+    + *messages* display progress messages (messages = FALSE).
+
+6.  <em> execPipeList (x, messages) </em>
+
+    This function extracts URLs from the pipe saved in the autoPipeSearch object.
+
+    + *x* autoPipeSearch object containing pipe.table that can be manually modified if desired.
+    + *messages* display progress messages (messages = FALSE).
+
 ### Auxiliary functions:
-5.  <em> dataMerger(x, byrow = TRUE) </em> 
+7.  <em> dataMerger(x, byrow = TRUE) </em> 
     
     This function merges the list of data objects together.
     
     +	*x* -- list of data objects.
     +	*byrow* -- list is merged by row or by column.  If byrow==FALSE only two objects are merged into a list.
 
-6.  <em> eftFormatter(x, Nvalid = "CEC", levels = TRUE) </em> 
+8.  <em> eftFormatter(x, Nvalid = "CEC", levels = TRUE) </em> 
 
     This function reformats the data for its use with Election Forensics Toolkit.
   
@@ -168,7 +189,7 @@ The description of the third webscraping path using *fast* method is provided in
     +	*Nvalid* -- valid votes computed using either "CEC" (Central Election Comission's formula); "AllVotes" (total number of votes cast for all candidates).
     +	*levels* -- add information on levels (TRUE) or not (FALSE) to the output.
 
-7.  <em> transliterate(v) </em>
+9.  <em> transliterate(v) </em>
 
     Returns transliterated expression.
     
@@ -176,7 +197,7 @@ The description of the third webscraping path using *fast* method is provided in
 
 
 ### Extraction of the candidate-related data
-8.  <em> scrapeCandidates(x, tabextract = NULL, savetodir = "") </em> 
+10. <em> scrapeCandidates(x, tabextract = NULL, savetodir = "") </em> 
 
     This function extracts the candidate-related data from the webpages.
     
@@ -197,7 +218,7 @@ The description of the third webscraping path using *fast* method is provided in
 
 3.	Slow Webscraping vs. Fast Webscraping
 
-    On the website of the Central Election Commission electoral data is provided in two different formats:  *Rezul'taty vyborov* (Election results) and *Svodnaya tablitsa rezul'tatov vyborov* (*Summary table of election results*).  If the first format is taking relatively long time to scrape (it contains deeper data structure with less data per page), the second format is much faster (it contains shallower data structure with more information per page).  Both approaches "slow" or "fast" can be used interchangeably, but slow webscraping can be more error prone.
+    On the website of the Central Election Commission electoral data is provided in two different formats:  *Rezul`taty vyborov* (Election results) and *Svodnaya tablitsa rezul`tatov vyborov* (*Summary table of election results*).  If the first format is taking relatively long time to scrape (it contains deeper data structure with less data per page), the second format is much faster (it contains shallower data structure with more information per page).  Both approaches "slow" or "fast" can be used interchangeably, but slow webscraping can be more error prone.
 
 4.	Table Search Automation vs. Manual Selection
 
@@ -407,7 +428,7 @@ Picture 12
     names(res3$data)
 
 
-### *Task 5: Webscrape the SMD electoral data for 2016 State Duma elections, webscrape  candidate's party ID, and then reformat the data using CLEA's formatting guidelines ([CLEA website](http://www.electiondataarchive.org/data-and-documentation.php)).  
+### *Task 5: Webscrape the SMD electoral data for 2016 State Duma elections. webscrape  candidate's party ID, and then reformat the data using CLEA's formatting guidelines ([CLEA website](http://www.electiondataarchive.org/data-and-documentation.php)).  
 
     #Full code
 
@@ -452,7 +473,53 @@ Picture 12
     #write.csv(merged_data3, "Russia2016_SMD.csv")
 
 
+### *Task 6: Webscrape the 2018 Primorye gubernatorial elections using autoPipeSearch() and execPipeList() functions.  
 
+    #Full code
 
-
-
+    library(CECscraper)
+    library(dplyr)
+    library(rvest)
+     
+    webpage <- read_html(system.file("elections_primorye.html", package="CECscraper"))
+    
+    #Example 1
+    wterrit <- webpage%>%
+               fileURLextractor(hashid = FALSE)
+    #uik_url1 <- wterrit%>%
+    #            autoPipeSearch(extracturls=TRUE, ttime=FALSE)
+    uik_url1 <- wterrit%>%
+                autoPipeSearch(ttime=TRUE)
+    uik_url2 <- uik_url1%>%
+                execPipeList()
+    #uik_url3 <-uik_url2%>%
+    #           dataBuilder(ttime=FALSE)
+    uik_url3 <- uik_url2%>%
+                dataBuilder(ttime=TRUE)
+    
+    #Example 2
+    uik_url1 <- wterrit%>%autoPipeSearch(blocks=c("listURLextractor()",
+                                                  "rowURLextractor('sayt izbiratel`noy komissii sub`yekta')",
+                                                  "rowURLextractor('Svodnaya tablitsa')"),  hits=3, search.term="Svodnaya tablitsa")
+    uik_url2 <- uik_url1%>%
+                execPipeList()%>%
+                dataBuilder(typedata = "fast")
+    
+    #Example 3
+    uik_url1 <- wterrit%>%autoPipeSearch(blocks=c("listURLextractor()",
+                                                  "rowURLextractor('sayt izbiratel`noy komissii sub`yekta')",
+                                                  "rowURLextractor('Dannyye ob otkrytii pomeshcheniy')"),  
+                                                   hits=3, search.term="Dannyye ob otkrytii pomeshcheniy")
+    uik_url2 <- uik_url1%>%
+                execPipeList()%>%
+                dataBuilder(ttime = TRUE, typedata = "fast")
+    
+    
+    #Example 4
+    uik_url1 <- wterrit%>%autoPipeSearch(blocks=c("listURLextractor()",
+                                                  "rowURLextractor('sayt izbiratel`noy komissii sub`yekta')",
+                                                  "rowURLextractor('Svedeniya o kandidatakh')"),  
+                                                   hits=1, search.term="Svedeniya o kandidatakh")
+    uik_url2 <- uik_url1%>%
+                execPipeList()%>%
+                scrapeCandidates(tabextract = NULL, savetodir = "")
