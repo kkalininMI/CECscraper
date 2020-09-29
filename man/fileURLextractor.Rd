@@ -4,8 +4,7 @@
 \alias{fileURLextractor}
 \title{fileURLextractor function}
 \usage{
-fileURLextractor(html_file, tabextract = NULL, hashid = FALSE,
-  messages = TRUE)
+fileURLextractor(html_file, tabextract = NULL, hashid = FALSE, messages = TRUE)
 }
 \arguments{
 \item{html_file}{html file object.}

@@ -9,16 +9,30 @@
 #' #Example
 #' library(CECscraper)
 #'
-#' murl <- "https://tinyurl.com/yy6roo3g"
+#' murl <- "http://notelections.online/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null"
 #' oiks <- listURLextractor(murl)
 #' rayons <- listURLextractor(listURLextractor(murl))
-#' uiks <- listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
+#' uiks <- listURLextractor(
+#'             rowURLextractor(
+#'                listURLextractor(
+#'                    listURLextractor(murl))[1:5,], 'sayt izbiratel`noy komissii sub`yekta'))
 
 
 listURLextractor<-function(x, messages = TRUE){
 
   if(isTRUE(messages)){
     cat("\n\nStarting listURLextractor()...\n\n")}
+
+  if(is.data.frame(x)){
+    httpadd<-substring(x$url[which.max(nchar(x$url))[1]], 1,regexpr("(?<=[[:alpha:]])/", x$url[which.max(nchar(x$url))[1]], perl=TRUE)[1]-1)
+  }else{
+    httpadd<-substring(x[1], 1,regexpr("(?<=[[:alpha:]])/", x[1], perl=TRUE)[1]-1)
+  }
+
+  regreg <- function(x){
+    gsub("/region/region/", "/region/", x)
+  }
+
 
   if("webscrape" %in% colnames(x)) {x <- x[x$webscrape,]}
 
@@ -71,7 +85,18 @@ listURLextractor<-function(x, messages = TRUE){
 
   links <- links[, order(names(links))]
 
+  #if(relativepath){
+  # links$url <- paste(substring(x$url, 1,regexpr("(?<=[[:alpha:]])/", root_url, perl=TRUE)[1]-1), links$url, sep="")}
+
+
+  #if(!grepl("http://", links$url[1])){
+  #    links$url <- paste(substring(x$url[1], 1,regexpr("(?<=[[:alpha:]])/", x$url[1], perl=TRUE)[1]-1), links$url, sep="")}
+
+  links$url[!grepl("http://", links$url)] <- regreg(paste(httpadd, links$url[!grepl("http://", links$url)], sep=""))
+
+
   on.exit(closeAllConnections())
   invisible(gc())
+
 
   return(links)}

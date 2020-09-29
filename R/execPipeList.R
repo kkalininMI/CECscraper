@@ -16,7 +16,7 @@
 #'  wterrit <- webpage %>% fileURLextractor(hashid = FALSE)
 #'  uik_url1 <- wterrit[1,]%>%autoPipeSearch(extracturls=TRUE, ttime=TRUE)
 #'  uik_url2 <- uik_url1%>%execPipeList()
-#'  uik_url3 <- uik_url2%>%dataBuilder(ttime=FALSE)
+#'  uik_url3 <- uik_url2%>%dataBuilder(ttime=TRUE)
 
 execPipeList <- function(x, messages=TRUE){
 

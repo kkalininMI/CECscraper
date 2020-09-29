@@ -4,9 +4,16 @@
 \alias{dataBuilder}
 \title{dataBuilder function}
 \usage{
-dataBuilder(x, bylevel = NULL, ttime = FALSE, typedata = "slow",
-  dnames = FALSE, tabextract = NULL, savetodir = "",
-  messages = TRUE)
+dataBuilder(
+  x,
+  bylevel = NULL,
+  ttime = FALSE,
+  typedata = "slow",
+  dnames = FALSE,
+  tabextract = NULL,
+  savetodir = "",
+  messages = TRUE
+)
 }
 \arguments{
 \item{x}{link/list/data frame with links.}
@@ -42,8 +49,11 @@ This function builds the data frame from the webpage or listURLextractor/rowURLe
 library(CECscraper)
 
 #Example 1
-murl<-"https://tinyurl.com/yy6roo3g"
-uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
+murl<-"http://notelections.online/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null"
+uiks <- listURLextractor(
+            rowURLextractor(
+               listURLextractor(
+                   listURLextractor(murl))[1:5,], 'sayt izbiratel`noy komissii sub`yekta'))
 
 uiks_turnout<-rowURLextractor(uiks, "Dannyye ob otkrytii pomeshcheniy dlya golosovaniya")
 uiks_voting<-rowURLextractor(uiks, "Rezul`taty vyborov|vyborov po odnomandatnomu \\\\(mnogomandatnomu\\\\) okrugu")
@@ -54,9 +64,9 @@ uiks_merged<-dataMerger(list(uiks_voting_data,uiks_turnout_data), byrow=FALSE)
 
 #Example 2
 # library(dplyr)
-# murl="https://tinyurl.com/y369jngp"
-#fast_downloadT<-rowURLextractor(murl, "Predvaritel'nyye svedeniya ob uchastii izbirateley")\%>\%
+# murl="http://notelections.online/region/izbirkom?action=show&global=1&vrn=100100084849062&region=0&prver=0&pronetvd=null"
+#fast_downloadT<-rowURLextractor(murl, "Predvaritel`nyye svedeniya ob uchastii izbirateley")\%>\%
 #                 listURLextractor()\%>\%listURLextractor()\%>\%sample_n(100, replace = FALSE)\%>\%
-#                 rowURLextractor("sayt izbiratel'noy komissii sub\\"yekta Rossiyskoy Federatsii")\%>\%
+#                 rowURLextractor("sayt izbiratel`noy komissii sub`yekta Rossiyskoy Federatsii")\%>\%
 #                 dataBuilder(typedata="fast", bylevel="level2", ttime=TRUE)\%>\%dataMerger()
 }

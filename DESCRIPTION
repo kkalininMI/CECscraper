@@ -8,7 +8,7 @@ Description: This web scraping package is designed to download the electoral dat
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Imports:
       xml2,
       rvest,

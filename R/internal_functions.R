@@ -378,8 +378,6 @@ contentextractor<-function(x, uplevel, ttime, typedata, dnames, savetodir, tabex
   return.content[selcols] = apply(return.content[selcols], 2, function(x) suppressWarnings(as.numeric(as.character(x))))
   return(return.content)}
 
-
-
 pipefinder<-function(base.url, blocks, search.term, hits, extracturls, breakloop, messages,...){
   msg1 <- grepl("(?<=\\(\\))$", blocks, perl=TRUE) & !grepl("messages\\s*=\\s*[FALSETRUE]", blocks, perl=TRUE)
   msg2 <- grepl("\\(.+\\)",  blocks, perl=TRUE) & !grepl("messages\\s*=\\s*[FALSETRUE]", blocks, perl=TRUE)
@@ -471,6 +469,7 @@ pipefinder<-function(base.url, blocks, search.term, hits, extracturls, breakloop
       }
 
       ls_res<-list()
+
       for(block in 1:dim(new_blocks)[1]){
 
         if(!is.null(old_blocks_data)){
@@ -479,7 +478,6 @@ pipefinder<-function(base.url, blocks, search.term, hits, extracturls, breakloop
           ev.exp <- tryCatch(eval(parse(text=co.exp)), error = function(e) e)
 
         }else{
-
           co.exp <- as.character(new_blocks[block,3])
           ev.exp <- tryCatch(eval(parse(text=co.exp)), error = function(e) e)
         }

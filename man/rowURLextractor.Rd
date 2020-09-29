@@ -21,15 +21,3 @@ Returns the data.frame object containing levels, links and urls.
 \description{
 This function extracts link and url from the webpage's row defined by specific expression.
 }
-\examples{
-library(CECscraper)
-
-murl<-"https://tinyurl.com/yy6roo3g"
-oiks<-listURLextractor(murl)
-rayons<-listURLextractor(listURLextractor(murl))
-#rayons<-listURLextractor(murl) \%>\% listURLextractor()
-uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
-
-uiks_turnout<-rowURLextractor(uiks, "Dannyye ob otkrytii pomeshcheniy dlya golosovaniya")
-uiks_voting<-rowURLextractor(uiks, "Rezul`taty vyborov|vyborov po odnomandatnomu \\\\(mnogomandatnomu\\\\) okrugu")
-}

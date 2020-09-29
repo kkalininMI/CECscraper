@@ -4,8 +4,7 @@
 \alias{scrapeCandidates}
 \title{scrapeCandidates function}
 \usage{
-scrapeCandidates(x, tabextract = NULL, savetodir = "",
-  messages = TRUE)
+scrapeCandidates(x, tabextract = NULL, savetodir = "", messages = TRUE)
 }
 \arguments{
 \item{x}{url, list of urls.}
@@ -25,6 +24,6 @@ This function extracts the candidate-related data from the webpages.
 \examples{
 library(CECscraper)
 
-url.moscow.candidates="https://tinyurl.com/yyhtfnwg"
+url.moscow.candidates="http://notelections.online/region/region/moscow_city?action=show&root=1&tvd=27720002327740&vrn=27720002327736&region=77&global=null&sub_region=0&prver=0&pronetvd=null&vibid=27720002327736&type=220"
 moscow.candidates<-scrapeCandidates(url.moscow.candidates)
 }

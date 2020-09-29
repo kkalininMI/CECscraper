@@ -4,8 +4,16 @@
 \alias{autoPipeSearch}
 \title{autoPipeSearch function}
 \usage{
-autoPipeSearch(x, ttime = FALSE, blocks = NULL, search.term = NULL,
-  hits = 2, extracturls = FALSE, breakloop = 100, messages = FALSE)
+autoPipeSearch(
+  x,
+  ttime = FALSE,
+  blocks = NULL,
+  search.term = NULL,
+  hits = 2,
+  extracturls = FALSE,
+  breakloop = 100,
+  messages = FALSE
+)
 }
 \arguments{
 \item{x}{url, list of urls.}

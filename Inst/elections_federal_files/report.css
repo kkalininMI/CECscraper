@@ -1,0 +1,38 @@
+BODY { font-family: Verdana, Arial; font-size: 8pt; color: #4E5882 ;}
+TD { font-family: Verdana, Arial; font-size: 8pt; color: #4E5882;}
+TD.w { font-family: Verdana, Arial; font-size: 8pt; color: #ffffff;}
+P { font-family: Verdana, Arial; font-size: 8pt; color: #4E5882;}
+P.w { font-family:  Arial; font-size: 8pt; color: #ffffff;}
+input { font-family: Verdana, Arial; font-size: 8pt;}
+select { font-family: Verdana, Arial; font-size: 8pt;}
+
+UL { font-family: Verdana, Arial; font-size: 8pt; margin-left: 20px; margin-top: 5px; margin-bottom: 5px;}
+LI {margin-bottom: 3px;}
+.headers { font-family: Verdana, Arial; font-weight: bold; font-size: 8pt; color: #ffffff; }
+.headers2 { font-family: Verdana, Arial; font-size: 9pt; color: red; font-weight: bold;}
+A.menu {font-family: Verdana, Arial; font-size: 8pt; text-decoration:none; color:#ffffff;}
+A.menu:hover {text-decoration:none; color:#cccc00;}
+A.menu:active {text-decoration:none; color:#cc0000;}
+A { font-family: Verdana, Arial; font-size: 8pt;  color:#0000ff}
+A:hover { color:#Ff0000;}
+A:active { color:#Ff0000;}
+th{ font-family: Verdana, Arial; font-weight: bold; font-size: 9pt; color: #4C6A84; }
+h1 {font-family: Verdana, Arial; font-weight: bold; font-size: 14pt;
+text-align : center;}
+h4 {font-family: Verdana, Arial; font-weight: bold; margin-bottom:0px;}
+a.menu4 {color:#4E2D2E;}
+
+.select_search_input  { font-family: MS Sans Serif, Arial; font-size: 8pt; width : 196px;}
+.text_search_input  { font-family: MS Sans Serif, Arial; font-size: 8pt; width : 196px;}
+.digit_search_input { font-family: MS Sans Serif, Arial; font-size: 8pt; width : 30px;}
+table.greyborders {
+	border-right: #d8dde3 1px solid; border-spacing: 0px; padding-right: 0px; border-top: #d8dde3 1px solid; padding-left: 0px; padding-bottom: 0px; border-left: #d8dde3 1px solid; padding-top: 0px; border-bottom: #d8dde3 1px solid
+}
+table.greyborders td {
+	border-right: #d8dde3 1px solid; border-spacing: 0px; padding-right: 0px; border-top: #d8dde3 1px solid; padding-left: 0px; padding-bottom: 0px; border-left: #d8dde3 1px solid; padding-top: 0px; border-bottom: #d8dde3 1px solid
+}
+div.npaContainer {width:1200px; margin:0 auto; position:relative;font:13px Arial, Helvetica, sans-serif; color:#656d78;}
+a.npa, a.npa:hover, a.npa:active, a.npa:visited {color:#264797;}
+input.dateFilterInput {width:36%}
+input.wideFilterInput {width:100%}
+td.dataTable {font: 13px Arial, Helvetica, sans-serif; color: #656d78;}

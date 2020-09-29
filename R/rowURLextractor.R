@@ -10,11 +10,14 @@
 #' @examples
 #' library(CECscraper)
 #'
-#' murl<-"https://tinyurl.com/yy6roo3g"
+#' murl<-http://notelections.online/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=nul"
 #' oiks<-listURLextractor(murl)
 #' rayons<-listURLextractor(listURLextractor(murl))
 #' #rayons<-listURLextractor(murl) %>% listURLextractor()
-#' uiks<-listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
+#' uiks <- listURLextractor(
+#'             rowURLextractor(
+#'                listURLextractor(
+#'                    listURLextractor(murl))[1:5,], 'sayt izbiratel`noy komissii sub`yekta'))
 #'
 #' uiks_turnout<-rowURLextractor(uiks, "Dannyye ob otkrytii pomeshcheniy dlya golosovaniya")
 #' uiks_voting<-rowURLextractor(uiks, "Rezul`taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
@@ -25,8 +28,17 @@ rowURLextractor<-function(x, item, select = 1, messages = TRUE){
     cat("\n\nStarting rowURLextractor()...\n\n")
   }
 
-
   if("webscrape" %in% colnames(x)) {x <- x[x$webscrape,]}
+
+  if(is.data.frame(x)){
+    httpadd<-substring(x$url[1], 1,regexpr("(?<=[[:alpha:]])/", x$url[1], perl=TRUE)[1]-1)
+  }else{
+    httpadd<-substring(x[1], 1,regexpr("(?<=[[:alpha:]])/", x[1], perl=TRUE)[1]-1)
+  }
+
+  regreg <- function(x){
+    gsub("/region/region/", "/region/", x)
+  }
 
   if (is.character(x) & length(x)==1){
     links<-data.frame(scrapregion(x), scrapmenupage(x))%>%filter(!is.na(url))
@@ -86,6 +98,18 @@ rowURLextractor<-function(x, item, select = 1, messages = TRUE){
 
   nlink <- nlink[, order(names(nlink))]
   nlink[]<-lapply(nlink, as.character)
+
+  #  if(is.data.frame(x)){
+  #    if(!grepl("http://", nlink$url[1])){
+  #      nlink$url <- paste(substring(x$url[1], 1,regexpr("(?<=[[:alpha:]])/", x$url[1], perl=TRUE)[1]-1), nlink$url, sep="")}
+  #      }else{
+  #        if(!grepl("http://", nlink$url[1])){
+  #          nlink$url <- paste(substring(x, 1,regexpr("(?<=[[:alpha:]])/", x[1], perl=TRUE)[1]-1), nlink$url, sep="")}
+  #      }
+
+  #browser()
+  nlink$url[!grepl("http://", nlink$url)] <- regreg(paste(httpadd, nlink$url[!grepl("http://", nlink$url)], sep=""))
+
 
   on.exit(closeAllConnections())
   invisible(gc())

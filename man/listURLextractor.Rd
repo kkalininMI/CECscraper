@@ -21,8 +21,11 @@ This function extracts links and urls from the lists/menus.
 #Example
 library(CECscraper)
 
-murl <- "https://tinyurl.com/yy6roo3g"
+murl <- "http://notelections.online/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null"
 oiks <- listURLextractor(murl)
 rayons <- listURLextractor(listURLextractor(murl))
-uiks <- listURLextractor(listURLextractor(listURLextractor(murl))[1:5,])
+uiks <- listURLextractor(
+            rowURLextractor(
+               listURLextractor(
+                   listURLextractor(murl))[1:5,], 'sayt izbiratel`noy komissii sub`yekta'))
 }

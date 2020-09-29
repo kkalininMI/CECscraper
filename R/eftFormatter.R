@@ -9,8 +9,11 @@
 #' @examples
 #' library(CECscraper)
 #'
-#' Rurls <- "https://tinyurl.com/yy6roo3g"
-#' uiks <- listURLextractor(listURLextractor(listURLextractor(Rurls))[1:5,])
+#'  murl <- "http://notelections.online/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null"
+#' uiks <- listURLextractor(
+#'             rowURLextractor(
+#'                listURLextractor(
+#'                    listURLextractor(murl))[1:5,], 'sayt izbiratel`noy komissii sub`yekta'))
 #' uiks_voting <- rowURLextractor(uiks, "Rezul`taty vyborov|vyborov po odnomandatnomu \\(mnogomandatnomu\\) okrugu")
 #' uiks_voting_data <- dataBuilder(uiks_voting, bylevel="level1", ttime=FALSE)
 #' uiksEFT <- eftFormatter(uiks_voting_data)
