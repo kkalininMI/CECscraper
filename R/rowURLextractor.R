@@ -107,7 +107,6 @@ rowURLextractor<-function(x, item, select = 1, messages = TRUE){
   #          nlink$url <- paste(substring(x, 1,regexpr("(?<=[[:alpha:]])/", x[1], perl=TRUE)[1]-1), nlink$url, sep="")}
   #      }
 
-  #browser()
   nlink$url[!grepl("http://", nlink$url)] <- regreg(paste(httpadd, nlink$url[!grepl("http://", nlink$url)], sep=""))
 
 

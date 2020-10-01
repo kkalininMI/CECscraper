@@ -1,22 +1,22 @@
 # CECscraper
 
 
-**CECscraper** is an open source tool specifically designed for webscraping the data from the website of Central Election Commission (CEC, CIK).  The package helps to implement a wide range of webscraping tasks related to different types of electoral data. The package's flexibility is stemming from its "constructor" principle: any webscraping task can be divided into a series of steps technically supported by the package's functions.  Compliance with [ethical standards of webscraping](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01) is left to user's discretion.
+**CECscraper** is an open source tool specifically designed for webscraping the data from the website of Central Election Commission (CEC, CIK).  Since CEC website is no longer available for webscrapping because of many captchas, this package uses its captcha-free mirror [http://notelections.online/](http://notelections.online/).  This package helps to implement a wide range of webscraping tasks related to different types of electoral data. The package's flexibility is stemming from its "bloc-building" approach: any webscraping task can be divided into a series of blocs technically supported by the package's functions.  Compliance with [ethical standards of webscraping](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01) is left to user's discretion.
 
 ## I Extraction of electoral data
 The webscraping algorithm consists of the building blocs expressed in the package's functions.  The scraping procedure is composed of two stages. On the first stage the user creates the data frame via the set of *URL extraction functions*, which includes target URLs and links (attributes directly linked to URLs), as well as attributes inherited from previous stages (called *level* or *info*). On the second stage, based on the URLs acquired from the first stage, the user builds the data frame containing electoral data via special data building function. 
 
 To give you a taste of how easy the webscraping becomes, let us webscrape the precinct-level data for Moscow City Council election held on September 2019.  With this task in mind the sequence of scraping steps will be as follows.
 
-First, load three libraries into the current **R** session. Then, open [http://www.izbirkom.ru](http://www.izbirkom.ru) in your web browser, and search for "Moscow City Council election, September 2019" to find the  *root URL* for this election.
+First, load three libraries into the current **R** session. Then, open [http://notelections.online/](http://notelections.online/) in your web browser, and search for "Moscow City Council election, September 2019" to find the  *root URL* for this election.
 
     library(CECscraper)
     library(dplyr)
     library(rvest)
 
-Second, click on the election link and copy-paste election's URL "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null" into a variable *root_url*
+Second, click on the election link and copy-paste election's URL "http://notelections.online/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null" into a variable *root_url*
     
-    root_url <- "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null"
+    root_url <- "http://notelections.online/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null"
     
 Third, consider that CEC's hierarchy of URLs takes the following form **general election results -> election results for OIKs/SMDs -> election results for rayons -> election results for precincts**. Given that right now we find ourselves on the **general election results** page, we can proceed by obtaining URLs for OIKs. There are different ways of doing this. For instance, we can obtain a set of URLs for OIKs simply by clicking on the drop-down menu of "Нижестоящие избирательные комиссии".  This menu can be used to extract links and URLs of interest.  Let's extract them from the *root_url* page via the *listURLextractor()* function from *root_url* page.
 
@@ -88,7 +88,7 @@ To access the webscraped data:
 
 Note that we've just described only one webscraping path out of several possible paths.  We could implement our webscraping algorithm in a slightly different manner:
 
-    root_url <- "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null".
+    root_url <- "http://notelections.online/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null"
 
     root_urlsD <- rowURLextractor(root_url, transliterate("Данные о предварительных итогах голосования по одномандатному (многомандатному) округу"))
     oiks_urls <- listURLextractor(root_urlsD)
@@ -106,7 +106,7 @@ Note that we've just described only one webscraping path out of several possible
                 listURLextractor() %>%
                 rowURLextractor(transliterate("сайт избирательной комиссии субъекта Российской Федерации")) %>%
                 listURLextractor() %>%
-                dataBuilder(uiks_urls,  bylevel="level2", typedata = "slow", dnames = TRUE) %>%
+                dataBuilder(bylevel="level2", typedata = "slow", dnames = TRUE) %>%
                 dataMerger(byrow = TRUE) 
 
 The description of the third webscraping path using *fast* method is provided in *Task 3*.
@@ -243,7 +243,7 @@ Let’s use the short-path approach by feeding root URL into a set of URL extrac
     
     library(CECscraper)
 
-    url<-"http://www.vybory.izbirkom.ru/region/izbirkom?action=show&global=1&vrn=100100084849062&region=0&prver=0&pronetvd=null" #See Picture 1
+    url<-"http://notelections.online/region/izbirkom?action=show&global=1&vrn=100100084849062&region=0&prver=0&pronetvd=null" #See Picture 1
     res1 <- rowURLextractor(url, transliterate("Результаты выборов"), select = 1) #See Picture 2
 
 ![Picture 3](Inst/Task1p3.png)
@@ -260,7 +260,7 @@ Let’s use the short-path approach by feeding root URL into a set of URL extrac
 
     library(CECscraper)
 
-    url<-"http://www.vybory.izbirkom.ru/region/izbirkom?action=show&global=1&vrn=100100084849062&region=0&prver=0&pronetvd=null" #See Picture 1
+    url<-"http://notelections.online/region/izbirkom?action=show&global=1&vrn=100100084849062&region=0&prver=0&pronetvd=null" #See Picture 1
     res1 <- rowURLextractor(url, transliterate("Результаты выборов"), select = 1) #See Picture 2
     res2 <- listURLextractor(res1)  #See Picture 3
     res3 <- dataBuilder(res2, ttime = FALSE, typedata = "slow", dnames = TRUE)
@@ -362,20 +362,20 @@ Picture 12
     ###########################
     #extracting electoral data#
     ###########################
-    url<-"http://www.vybory.izbirkom.ru/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null" #See Picture 7 and Picture 8
+    url<-"http://notelections.online/region/izbirkom?action=show&vrn=27720002327736&region=77&prver=0&pronetvd=null" #See Picture 7 and Picture 8
     
     res1 <- rowURLextractor(url, transliterate("Сводная таблица предварительных итогов голосования")) #See Picture 8
     res2 <- listURLextractor(res1)  #See Picture 9
     res3 <- listURLextractor(res2)  #See Picture 10
     res4 <- rowURLextractor(res3, transliterate("сайт избирательной комиссии субъекта Российской Федерации")) #See Picture 11
-    res5 <- dataBuilder(res4, typedata = "fast", dnames = TRUE, bylevel="level3") #See Picture 12
+    res5 <- dataBuilder(res4, typedata = "fast", dnames = TRUE, bylevel="level2") #See Picture 12
     
     #an alternative with pipe operator
     res5 <- rowURLextractor(url, transliterate("Сводная таблица предварительных итогов голосования")) %>%
               listURLextractor() %>%
               listURLextractor() %>%
               rowURLextractor(transliterate("сайт избирательной комиссии субъекта Российской Федерации")) %>%
-              dataBuilder(typedata = "fast", dnames = TRUE, bylevel="level3")
+              dataBuilder(typedata = "fast", dnames = TRUE, bylevel="level2")
     
     #############################
     #extracting time information#
@@ -384,14 +384,14 @@ Picture 12
     res2t <- listURLextractor(res1t)
     res3t <- listURLextractor(res2t)
     res4t <- rowURLextractor(res3t, transliterate("сайт избирательной комиссии субъекта Российской Федерации"))
-    res5t <- dataBuilder(res4t, typedata = "fast", ttime = TRUE, dnames = TRUE, bylevel="level3")
+    res5t <- dataBuilder(res4t, typedata = "fast", ttime = TRUE, dnames = TRUE, bylevel="level2")
     
     #an alternative with pipe operator
     res5t <- rowURLextractor(url, transliterate("Данные об открытии помещений для голосования")) %>%
                listURLextractor() %>%
                listURLextractor() %>% 
                rowURLextractor(transliterate("сайт избирательной комиссии субъекта Российской Федерации")) %>%
-               dataBuilder(typedata = "fast", ttime = TRUE, dnames = TRUE, bylevel="level3")
+               dataBuilder(typedata = "fast", ttime = TRUE, dnames = TRUE, bylevel="level2")
     
     ###############################
     #merging electoral + time data#
@@ -405,7 +405,7 @@ Picture 12
     ###############################
     #extracting info on candidates#
     ###############################
-    urlc <- "http://www.moscow_city.vybory.izbirkom.ru/region/region/moscow_city?action=show&root=1&tvd=27720002327740&vrn=27720002327736&region=77&global=null&sub_region=0&prver=0&pronetvd=null&vibid=27720002327736&type=220"
+    urlc <- "http://notelections.online/region/moscow_city?action=show&root=1&tvd=27720002327740&vrn=27720002327736&region=77&global=null&sub_region=0&prver=0&pronetvd=null&vibid=27720002327736&type=220"
     resc <- scrapeCandidates(urlc)
 
 
@@ -436,7 +436,7 @@ Picture 12
     library(dplyr)
     
     #Scrape SMD data
-    url2016<-"http://www.vybory.izbirkom.ru/region/izbirkom?action=show&global=1&vrn=100100067795849&region=0&prver=0&pronetvd=0"
+    url2016<-"http://notelections.online/region/izbirkom?action=show&global=1&vrn=100100067795849&region=0&prver=0&pronetvd=0"
     
     p0<-rowURLextractor(url2016, transliterate("Результаты выборов по одномандатному избирательному округу"), select=1)%>%
         listURLextractor()%>%
@@ -458,7 +458,7 @@ Picture 12
     electoral_info <- data.frame(cbind(oiks, oiks_num, t(p1[c(7:24),])), stringsAsFactors = FALSE)
     
     #Scrape the data on candidate's party ID
-    candidates="http://www.vybory.izbirkom.ru/region/region/izbirkom?action=show&root=1&tvd=100100067795854&vrn=100100067795849&region=0&global=true&sub_region=0&prver=0&pronetvd=0&vibid=100100067795849&type=220"
+    candidates="http://notelections.online/region/izbirkom?action=show&root=1&tvd=100100067795854&vrn=100100067795849&region=0&global=true&sub_region=0&prver=0&pronetvd=0&vibid=100100067795849&type=220"
     smd.candidates<-scrapeCandidates(candidates)
     smd.candidates2<-subset(smd.candidates$data, select=c("FIO.kandidata", "Nomer.okruga", "Status.kandidata.4", "Sub.yekt.vydvizheniya"))
     smd.candidates3<-smd.candidates$data[,c("FIO.kandidata", "Nomer.okruga", "Status.kandidata.4", "Sub.yekt.vydvizheniya", "Status uchastnika vyborov")]
@@ -503,7 +503,7 @@ Picture 12
                                                   "rowURLextractor('Svodnaya tablitsa')"),  hits=3, search.term="Svodnaya tablitsa")
     uik_url2 <- uik_url1%>%
                 execPipeList()%>%
-                dataBuilder(typedata = "fast")
+                uik_url2 %>% dataBuilder(typedata = "fast")
     
     #Example 3
     uik_url1 <- wterrit%>%autoPipeSearch(blocks=c("listURLextractor()",

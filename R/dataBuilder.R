@@ -50,7 +50,7 @@ dataBuilder<-function(x, bylevel=NULL, ttime=FALSE,  typedata="slow", dnames=FAL
 
   if(isTRUE(messages)){
     cat("\n\nStarting dataBuilder()...\n\n")
-    }
+  }
 
   if("download" %in% colnames(x)) {x <- x[x$download,]}
 
@@ -59,40 +59,44 @@ dataBuilder<-function(x, bylevel=NULL, ttime=FALSE,  typedata="slow", dnames=FAL
 
   if(!is.null(bylevel)|is.list(x)){
 
-    if(!is.null(bylevel)){
+    if(!is.null(bylevel)& all(names(x)!="pipe.table")){
       assign("splvar", x[names(x)%in%bylevel])
-      mdat <- split(x, splvar);}
+      mdat <- split(x, splvar);}else{
+        mdat <- x
+      }
 
-    if(!is.data.frame(x) & is.null(mdat)){
+    if(!is.data.frame(x) & any(names(x)=="pipe.table")){
       if("elections"%in%names(x) & dim(x$pipe.table)[1]>1 & all(x$elections$extracted.res!="No data could be extracted")){
         mdat <- lapply(x$elections, function(xx) xx$extracted.res)
-          if (is.null(dim(mdat)))  mdat <- x$elections$extracted.res
+        if (is.null(dim(mdat)))  mdat <- x$elections$extracted.res
 
-          }else if(is.null(mdat)){
-          mdat <- x$elections$extracted.res
-    }
+      #}else if(is.null(mdat)){
+      }else{
+        mdat <- x$elections$extracted.res
+      }
     }
 
     if(!is.data.frame(mdat)){
 
       for (iterN in names(mdat)){
         if(mdat[[iterN]]!="No data could be extracted"){
+
           storage[[iterN]] <- contentextractor(mdat[[iterN]], uplevel=iterN, ttime, typedata, dnames, savetodir, tabextract)
         }else{
           storage[[iterN]] <- "No data could be extracted"
-          }}
+        }}
 
-      }else{
-        if(mdat!="No data could be extracted"){
-          storage <- contentextractor(mdat, uplevel="Full dataset", ttime, typedata, dnames, savetodir, tabextract)
-          }else{
-          storage <- "No data could be extracted"
-        }
-      }
     }else{
-      mdat=x
-      storage<-contentextractor(mdat, uplevel="Full dataset", ttime, typedata, dnames, savetodir, tabextract)
+      if(mdat!="No data could be extracted"){
+        storage <- contentextractor(mdat, uplevel="Full dataset", ttime, typedata, dnames, savetodir, tabextract)
+      }else{
+        storage <- "No data could be extracted"
+      }
     }
+  }else{
+    mdat=x
+    storage<-contentextractor(mdat, uplevel="Full dataset", ttime, typedata, dnames, savetodir, tabextract)
+  }
 
   if("pipe.table"%in%names(x)){pipe.table <- x$pipe.table}else{pipe.table <-NULL}
   result=list(data=storage, ttime=ttime, dnames=dnames, bylevel=bylevel, retreivaldate=Sys.time(), pipe.table=x$pipe.table)

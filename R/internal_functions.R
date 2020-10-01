@@ -330,6 +330,7 @@ scrappage_fast <- function(x, ttime, dnames, savetodir, tabextract){
 
 
 contentextractor<-function(x, uplevel, ttime, typedata, dnames, savetodir, tabextract){
+
   errorf<-function(y){
     max_el<-max(unlist(lapply(y, function(x){length(x[!is.na(x)])})))
     errorM<-lapply(y, function(x){

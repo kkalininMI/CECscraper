@@ -121,7 +121,6 @@ scrapeCandidates <- function(x, tabextract = NULL, savetodir = "", messages = TR
     }
     return(tab_result)}
 
-   # browser()
     if(is.list(x) & "elections"%in%names(x)){
       x_names <- apply(x$pipe.table[colnames(x$pipe.table)[grepl("level|link", colnames(x$pipe.table))]], 1, function(x) paste(x,  collapse=", "))
       x <- unlist(lapply(1:length(x$elections$extracted.res), function(o){
