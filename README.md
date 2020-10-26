@@ -1,5 +1,6 @@
 # CECscraper
 
+[![DOI](https://zenodo.org/badge/212958870.svg)](https://zenodo.org/badge/latestdoi/212958870)
 
 **CECscraper** is an open source tool specifically designed for webscraping the data from the website of Central Election Commission (CEC, CIK).  Since CEC website is no longer available for webscrapping because of many captchas, this package uses its captcha-free mirror [http://notelections.online/](http://notelections.online/).  This package helps to implement a wide range of webscraping tasks related to different types of electoral data. The package's flexibility is stemming from its "bloc-building" approach: any webscraping task can be divided into a series of blocs technically supported by the package's functions.  Compliance with [ethical standards of webscraping](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01) is left to user's discretion.
 
